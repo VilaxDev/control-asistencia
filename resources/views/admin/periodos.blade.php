@@ -16,12 +16,7 @@
                     @csrf
                     <div class="modal-body">
                         <!-- Campo para ingresar el año -->
-                        <div class="mb-3">
-                            <label for="anio" class="form-label">Año del Periodo</label>
-                            <input type="number" class="form-control" id="anio" name="anio" required
-                                placeholder="Ingrese el año del periodo (Ejemplo: 2024)">
-                            <div class="form-text">Especifique el año correspondiente al periodo</div>
-                        </div>
+                        <x-year-selector name="anio" label="Seleccione el Año" />
 
                         <!-- Campo para seleccionar la fecha de inicio -->
                         <div class="mb-3">
@@ -58,6 +53,12 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
+        @error('anio')
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ $message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @enderror
         <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">Crear
             periodo <i class="ti ti-circle-plus"></i></button>
         <div class="row">

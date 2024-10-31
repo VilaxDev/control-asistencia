@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Carga de Chart.js desde el CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 
 <body>
@@ -127,9 +130,17 @@
                                 <span class="hide-menu">Asistencias</span>
                             </a>
                         </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ url('admin/reportes') }}" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-chart-bar"></i>
+                                </span>
+                                <span class="hide-menu">Reportes</span>
+                            </a>
+                        </li>
                         <li class="nav-small-cap">
                             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                            <span class="hide-menu">Autorización</span>
+                            <span class="hide-menu">Usuario</span>
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ url('admin/perfil') }}" aria-expanded="false">

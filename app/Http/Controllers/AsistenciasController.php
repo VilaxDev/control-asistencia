@@ -225,15 +225,32 @@ class AsistenciasController extends Controller
         }
 
         // Convertir dias_laborales a un array
-        $diasLaborales = json_decode($horario->dias_laborales, true); // Asegúrate que está almacenado como JSON en la base de datos
-
-        // Verificar que la conversión fue exitosa
+        $diasLaborales = json_decode($horario->dias_laborales, true);
         if (!is_array($diasLaborales)) {
-            $diasLaborales = []; // Valor por defecto si no es un array
+            $diasLaborales = [];
         }
 
+        // Obtener el año actual
+        $currentYear = date('Y');
+
+        // Buscar el periodo actual basado en el año actual
+        $periodo = DB::table('periodo')
+            ->where('anio', $currentYear)
+            ->first();
+
+        // Si no existe periodo para el año actual
+        if (!$periodo) {
+            return response()->json(['error' => 'No se encontró un periodo activo para el año actual'], 404);
+        }
+
+        // Buscar los eventos asociados al periodo actual
+        $eventos = DB::table('evento')
+            ->where('periodo_id', $periodo->id)
+            ->get();
+
         $empresa = DB::table('empresa')->first();
-        // Si las credenciales son correctas, devolver los datos del usuario, colaborador y horario
+
+        // Preparar los datos de respuesta
         $usuarioData = [
             'id' => $usuario->id,
             'nombre' => $usuario->nombre,
@@ -254,15 +271,32 @@ class AsistenciasController extends Controller
             'id' => $horario->id,
             'hora_entrada' => $horario->hora_entrada,
             'hora_salida' => $horario->hora_salida,
-            'dias_laborales' => $diasLaborales, // Asegúrate de que este campo es un array
+            'dias_laborales' => $diasLaborales,
         ];
 
+        $periodoData = [
+            'id' => $periodo->id,
+            'anio' => $periodo->anio,
+            'fecha_inicio' => $periodo->fecha_inicio,
+            'fecha_fin' => $periodo->fecha_fin,
+        ];
+
+        $eventosData = $eventos->map(function ($evento) {
+            return [
+                'id' => $evento->id,
+                'fecha' => $evento->fecha,
+                'descripcion' => $evento->descripcion,
+                // Agrega aquí más campos de eventos si los necesitas
+            ];
+        });
 
         return response()->json([
             'message' => 'Inicio de sesión exitoso',
             'user' => $usuarioData,
             'colaborador' => $colaboradorData,
             'horario' => $horarioData,
+            'periodo' => $periodoData,
+            'eventos' => $eventosData,
         ], 200);
     }
 
@@ -300,6 +334,23 @@ class AsistenciasController extends Controller
         if (!is_array($diasLaborales)) {
             $diasLaborales = []; // Valor por defecto si no es un array
         }
+        // Obtener el año actual
+        $currentYear = date('Y');
+
+        // Buscar el periodo actual basado en el año actual
+        $periodo = DB::table('periodo')
+            ->where('anio', $currentYear)
+            ->first();
+
+        // Si no existe periodo para el año actual
+        if (!$periodo) {
+            return response()->json(['error' => 'No se encontró un periodo activo para el año actual'], 404);
+        }
+
+        // Buscar los eventos asociados al periodo actual
+        $eventos = DB::table('evento')
+            ->where('periodo_id', $periodo->id)
+            ->get();
 
         $empresa = DB::table('empresa')->first();
 
@@ -328,6 +379,22 @@ class AsistenciasController extends Controller
             'hora_salida' => $horario->hora_salida,
             'dias_laborales' => $diasLaborales,
         ];
+        $periodoData = [
+            'id' => $periodo->id,
+            'anio' => $periodo->anio,
+            'fecha_inicio' => $periodo->fecha_inicio,
+            'fecha_fin' => $periodo->fecha_fin,
+        ];
+
+        $eventosData = $eventos->map(function ($evento) {
+            return [
+                'id' => $evento->id,
+                'fecha' => $evento->fecha,
+                'descripcion' => $evento->descripcion,
+                // Agrega aquí más campos de eventos si los necesitas
+            ];
+        });
+
 
         // Devolver la respuesta con los datos del usuario, colaborador y horario
         return response()->json([
@@ -335,6 +402,8 @@ class AsistenciasController extends Controller
             'user' => $usuarioData,
             'colaborador' => $colaboradorData,
             'horario' => $horarioData,
+            'periodo' => $periodoData,
+            'eventos' => $eventosData,
         ], 200);
     }
 }

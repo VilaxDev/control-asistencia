@@ -13,6 +13,7 @@ use App\Http\Controllers\PeriodosController;
 use App\Http\Controllers\EventosController;
 use App\Http\Controllers\AsistenciasController;
 use App\Http\Controllers\PerfilController;
+use App\Http\Controllers\ReportesController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -78,6 +79,9 @@ Route::middleware('auth:admin,supervisor')->group(function () {
     //Asistencias
     Route::get('admin/asistencias', [AsistenciasController::class, 'index'])->name('asistencias.index');
     Route::get('admin/asistencia/show/{id}', [AsistenciasController::class, 'show'])->name('asistencia.show');
+
+    //Reportes
+    Route::get('admin/reportes', [ReportesController::class, 'index'])->name('reportes.index');
 
     //Acerca de de
     Route::get('/admin/acerca-de', function () {
