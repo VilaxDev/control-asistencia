@@ -51,15 +51,6 @@
                             <span class="hide-menu">Administracion</span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ url('admin/ubicacion-empresarial') }}"
-                                aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-map-pin"></i>
-                                </span>
-                                <span class="hide-menu">Ubicación Empresarial</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ url('admin/periodos') }}" aria-expanded="false">
                                 <span>
                                     <img src="{{ url('/assets/images/logos/calendar-bolt.svg') }}" alt="">

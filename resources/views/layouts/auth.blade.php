@@ -30,8 +30,8 @@
                             class="text-nowrap logo-img d-block px-4 py-9 w-100">
                         </a>
                         <div class="d-none d-xl-flex align-items-center justify-content-center h-n80">
-                            <img src="https://bootstrapdemos.adminmart.com/modernize/dist/assets/images/backgrounds/login-security.svg"
-                                alt="modernize-img" class="img-fluid" width="500">
+                            <img src="{{ url('assets/images/backgrounds/login-security.svg') }}" alt="modernize-img"
+                                class="img-fluid" width="500">
                         </div>
                     </div>
                     <div class="col-xl-5 col-xxl-4">

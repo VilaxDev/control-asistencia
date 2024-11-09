@@ -8,7 +8,6 @@ use App\Http\Controllers\TipoColaboradorController;
 use App\Http\Controllers\UsuariosController;
 use App\Http\Controllers\HorarioController;
 use App\Http\Controllers\ColaboradoresController;
-use App\Http\Controllers\UbicacionEmpresarialController;
 use App\Http\Controllers\PeriodosController;
 use App\Http\Controllers\EventosController;
 use App\Http\Controllers\AsistenciasController;
@@ -36,12 +35,6 @@ Route::middleware('auth:admin,supervisor')->group(function () {
     //Perfil
     Route::get('admin/perfil', [PerfilController::class, 'index'])->name('perfil.index');
     Route::put('admin/perfil/update/{id}', [PerfilController::class, 'update'])->name('perfil.update');
-
-    //Ubicacion Empresarial
-    Route::get('admin/ubicacion-empresarial', [UbicacionEmpresarialController::class, 'index'])->name('ubicacionEmpresarial.index');
-    Route::post('admin/ubicacion-empresarial/create', [UbicacionEmpresarialController::class, 'create'])->name('ubicacionEmpresarial.create');
-    Route::put('admin/ubicacion-empresarial/update/{id}', [UbicacionEmpresarialController::class, 'update'])->name('ubicacionEmpresarial.update');
-    Route::delete('admin/ubicacion_empresarial/delete/{id}', [UbicacionEmpresarialController::class, 'delete'])->name('ubicacionEmpresarial.delete');
 
     //Periodos
     Route::get('admin/periodos', [PeriodosController::class, 'index'])->name('periodos.index');

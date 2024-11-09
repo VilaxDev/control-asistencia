@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-        <h1 class="text-center my-4">Dashboard</h1>
+        <h1 class="text-center">Dashboard</h1>
 
         <div class="row">
             <!-- Card de Resumen de Asistencia -->
