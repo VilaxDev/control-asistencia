@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+
 
 class AsistenciasController extends Controller
 {
@@ -190,6 +193,7 @@ class AsistenciasController extends Controller
 
     public function login(Request $request)
     {
+        // Validación de los datos de entrada
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
@@ -207,6 +211,17 @@ class AsistenciasController extends Controller
         if (!Hash::check($request->password, $usuario->password)) {
             return response()->json(['error' => 'Contraseña incorrecta'], 401);
         }
+
+        // Verificar si ya hay un token activo
+        if (!empty($usuario->token)) {
+            return response()->json(['error' => 'Ya se ha iniciado sesión en otro dispositivo'], 409);
+        }
+
+        // Generar un nuevo token único para el usuario
+        $token = Str::random(60);
+
+        // Guardar el token en la base de datos
+        DB::table('usuario')->where('id', $usuario->id)->update(['token' => $token]);
 
         // Buscar el colaborador asociado al usuario
         $colaborador = DB::table('colaborador')->where('usuario_id', $usuario->id)->first();
@@ -248,8 +263,6 @@ class AsistenciasController extends Controller
             ->where('periodo_id', $periodo->id)
             ->get();
 
-        $empresa = DB::table('empresa')->first();
-
         // Preparar los datos de respuesta
         $usuarioData = [
             'id' => $usuario->id,
@@ -257,6 +270,7 @@ class AsistenciasController extends Controller
             'apellidos' => $usuario->apellidos,
             'email' => $usuario->email,
             'rol' => $usuario->rol,
+            'token' => $token, // Añadir el token generado a la respuesta
         ];
 
         $colaboradorData = [
@@ -286,7 +300,6 @@ class AsistenciasController extends Controller
                 'id' => $evento->id,
                 'fecha' => $evento->fecha,
                 'descripcion' => $evento->descripcion,
-                // Agrega aquí más campos de eventos si los necesitas
             ];
         });
 
@@ -298,6 +311,38 @@ class AsistenciasController extends Controller
             'periodo' => $periodoData,
             'eventos' => $eventosData,
         ], 200);
+    }
+
+
+
+    public function updateToken($id)
+    {
+        try {
+            // Buscar el usuario por el ID
+            $usuario = DB::table('usuario')->where('id', $id)->first();
+
+            // Verificar si el usuario existe
+            if (!$usuario) {
+                return response()->json(['error' => 'Usuario no encontrado'], 404);
+            }
+
+            // Actualizar el campo 'token' a vacío y mantener los demás campos igual
+            DB::table('usuario')->where('id', $id)->update([
+                'nombre' => $usuario->nombre,
+                'apellidos' => $usuario->apellidos,
+                'email' => $usuario->email,
+                'token' => '',
+                'password' => $usuario->password,
+                'rol' => $usuario->rol,
+                'fecha_creacion' => $usuario->fecha_creacion,  // Mantener el resto de campos sin cambios
+            ]);
+
+            return response()->json(['message' => 'Token actualizado correctamente'], 200);
+        } catch (\Exception $e) {
+            Log::error('Error al actualizar el token: ' . $e->getMessage());
+
+            return response()->json(['error' => 'Error al actualizar el token: ' . $e->getMessage()], 500);
+        }
     }
 
 

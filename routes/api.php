@@ -4,14 +4,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AsistenciasController;
 use App\Http\Controllers\HorarioController;
-use App\Http\Controllers\UbicacionEmpresarialController;
 
 Route::post('/admin/api/colaborador/login', [AsistenciasController::class, 'login']);
 Route::post('/admin/api/datos/update/colaborador/{id}', [AsistenciasController::class, 'actualizarDatos']);
+Route::put('/admin/api/update/token/usuario/{id}', [AsistenciasController::class, 'updateToken']);
 
 Route::get('/admin/api/horarios', [HorarioController::class, 'api']);
 
-Route::get('/admin/api/ubicacion', [UbicacionEmpresarialController::class, 'apiGetUbicacion']);
 
 Route::put('/admin/api/asistencias/manana', [AsistenciasController::class, 'updateLateAttendanceManana']);
 Route::put('/admin/api/asistencias/tarde', [AsistenciasController::class, 'updateLateAttendanceTarde']);
