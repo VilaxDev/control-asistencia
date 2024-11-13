@@ -154,7 +154,7 @@
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ url('') }}" aria-expanded="false">
+                            <a class="sidebar-link" href="{{ url('admin/dashboard') }}" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-settings"></i>
                                 </span>
