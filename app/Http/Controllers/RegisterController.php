@@ -33,6 +33,6 @@ class RegisterController extends Controller
             'fecha_creacion' => Carbon::now(),
         ]);
 
-        return redirect('login');
+        return redirect('/');
     }
 }

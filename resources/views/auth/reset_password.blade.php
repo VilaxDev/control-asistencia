@@ -17,7 +17,7 @@
                         <label for="exampleInputEmail1" class="form-label">Correo Electronico</label>
                         <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
                     </div>
-                    <a href="javascript:void(0)" class="btn btn-primary w-100 py-8 mb-3">Has olvidado tu contraseña</a>
+                    <a href="javascript:void(0)" class="btn btn-primary w-100 py-8 mb-3">Restablecer </a>
                     <a href="{{ url('/') }}" class="btn bg-primary-subtle text-primary w-100 py-8">Volver a Inicio de
                         Sesión</a>
                 </form>

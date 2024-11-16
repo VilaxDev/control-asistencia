@@ -26,11 +26,8 @@
 
                 <x-input-password name="password" label="Contraseña" />
                 <div class="mb-3">
-                    <label class="form-label" for="rol">Rol</label>
-                    <select class="form-select form-control" name="rol" id="rol">
-                        <option value="" disabled selected>Seleccione un rol</option>
-                        <option value="Administrador">Administrador</option>
-                        <option value="Supervisor">Supervisor</option>
+                    <select class="form-select form-control" name="rol" id="rol" hidden>
+                        <option value="Administrador" selected>Administrador</option>
                     </select>
                 </div>
                 <button class="btn btn-primary w-100 py-8 mb-4 rounded-2" type="submit">Registrarse
