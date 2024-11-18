@@ -18,9 +18,7 @@ class PeriodosController extends Controller
         // Validación con regla unique para el año
         $request->validate([
             'anio' => 'required|unique:periodo,anio',
-            'fecha_inicio' => 'required',
-            'fecha_fin' => 'required',
-            'creado_por' => '',
+            'id_usuario' => '',
         ], [
 
             'anio.unique' => 'Ya existe un periodo registrado para el año :input.',
@@ -38,9 +36,7 @@ class PeriodosController extends Controller
             // Insertar el periodo
             DB::table('periodo')->insert([
                 'anio' => $request->anio,
-                'fecha_inicio' => $request->fecha_inicio,
-                'fecha_fin' => $request->fecha_fin,
-                'creado_por' => $id_admin,
+                'id_usuario' => $id_admin,
             ]);
 
             return redirect()->back()->with('success', 'Periodo creado exitosamente');
@@ -57,9 +53,7 @@ class PeriodosController extends Controller
     {
         $request->validate([
             'anio' => 'required',
-            'fecha_inicio' => 'required',
-            'fecha_fin' => 'required',
-            'creado_por' => '',
+            'id_usuario' => '',
         ]);
 
         $administrador = DB::table('usuario')
@@ -70,9 +64,7 @@ class PeriodosController extends Controller
 
         DB::table('periodo')->where('id', $id)->update([
             'anio' => $request->anio,
-            'fecha_inicio' => $request->fecha_inicio,
-            'fecha_fin' => $request->fecha_fin,
-            'creado_por' => $id_admin,
+            'id_usuario' => $id_admin,
         ]);
 
         return redirect()->back()->with('success', 'Periodo actualizado correctamente');

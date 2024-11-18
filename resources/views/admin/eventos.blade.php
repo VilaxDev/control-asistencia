@@ -21,8 +21,7 @@
                             <label for="fecha" class="form-label fw-bold text-primary">
                                 <i class="fas fa-calendar-day me-1"></i>Fecha
                             </label>
-                            <input type="date" class="form-control @error('fecha') is-invalid @enderror" id="fecha"
-                                name="fecha" required min="{{ date('Y-m-d') }}">
+                            <x-date-input name="fecha"/>
                         </div>
 
                         <!-- Campo Descripción -->

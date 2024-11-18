@@ -12,8 +12,8 @@ class ColaboradoresController extends Controller
     {
         // Obtener toda la información de colaboradores de varias tablas
         $colaboradores = DB::table('usuario')
-            ->join('colaborador', 'usuario.id', '=', 'colaborador.usuario_id')
-            ->join('horario', 'colaborador.horario_id', '=', 'horario.id')
+            ->join('colaborador', 'usuario.id', '=', 'colaborador.id_usuario')
+            ->join('horario', 'colaborador.id_horario', '=', 'horario.id')
             ->where('usuario.rol', 'Colaborador')
             ->select(
                 'usuario.id',
@@ -29,8 +29,8 @@ class ColaboradoresController extends Controller
                 'colaborador.fecha_fin',
                 'colaborador.tipo_contrato',
                 'colaborador.tipo_colaborador',
-                'colaborador.horario_id',
-                'colaborador.usuario_id',
+                'colaborador.id_horario',
+                'colaborador.id_usuario',
                 'horario.nom_horario',
             )->paginate(8);
 
@@ -81,8 +81,8 @@ class ColaboradoresController extends Controller
             'estado' => $request->estado,
             'tipo_contrato' => $request->tipo_contrato,
             'tipo_colaborador' => $request->tipo_colaborador,
-            'usuario_id' => $id_usuario,
-            'horario_id' => $id_horario,
+            'id_usuario' => $id_usuario,
+            'id_horario' => $id_horario,
             'creado_por' => $id_admin,
         ];
 
@@ -128,8 +128,8 @@ class ColaboradoresController extends Controller
             'estado' => $request->estado,
             'tipo_contrato' => $request->tipo_contrato,
             'tipo_colaborador' => $request->tipo_colaborador,
-            'usuario_id' => $colaborador->usuario_id, // Mantener el usuario_id original
-            'horario_id' => $request->horario_id,
+            'id_usuario' => $colaborador->usuario_id, // Mantener el usuario_id original
+            'id_horario' => $request->horario_id,
             'creado_por' => $id_admin,
         ];
 

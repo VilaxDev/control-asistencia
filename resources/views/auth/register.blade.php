@@ -11,22 +11,23 @@
 
                 <div class="mb-3">
                     <label class="form-label" for="nombre">Nombre</label>
-                    <input type="text" id="nombre" class="form-control" name="nombre" />
+                    <input type="text" id="nombre" class="form-control" name="nombre" required />
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label" for="apellidos">Apellidos</label>
-                    <input type="text" id="apellidos" class="form-control" name="apellidos" />
+                    <input type="text" id="apellidos" class="form-control" name="apellidos" required />
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label" for="email">Correo Electroníco</label>
-                    <input type="email" id="email" class="form-control" name="email" />
+                    <input type="email" id="email" class="form-control" name="email" required />
                 </div>
 
-                <x-input-password name="password" label="Contraseña" />
+                <x-input-password name="password" label="Contraseña" required />
                 <div class="mb-3">
-                    <select class="form-select form-control" name="rol" id="rol" hidden>
+                    <label class="form-label" for="rol">Rol</label>
+                    <select class="form-select form-control" name="rol" id="rol" required>
                         <option value="Administrador" selected>Administrador</option>
                     </select>
                 </div>

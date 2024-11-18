@@ -238,7 +238,7 @@
                                             <div class="mb-3">
                                                 <label for="nombre" class="form-label">Selecione el horario</label>
                                                 <select name="horario_id" id="tipo_colaborador" class="form-control">
-                                                    <option value="{{ $colaborador->horario_id }}" selected>
+                                                    <option value="{{ $colaborador->id_horario }}" selected>
                                                         {{ $colaborador->nom_horario }}</option>
                                                     @foreach ($horarios as $horario)
                                                         <option value="{{ $horario->id }}">{{ $horario->nom_horario }}
@@ -271,7 +271,7 @@
                                             <input type="hidden" name="fecha_creacion"
                                                 value="{{ $colaborador->fecha_creacion }}" />
                                             <input type="hidden" name="usuario_id"
-                                                value="{{ $colaborador->usuario_id }}" />
+                                                value="{{ $colaborador->id_usuario }}" />
                                             <div class="form-check form-switch">
                                                 <input type="hidden" name="estado" value="off">
                                                 <input class="form-check-input" type="checkbox" role="switch"

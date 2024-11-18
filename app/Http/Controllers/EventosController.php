@@ -19,8 +19,8 @@ class EventosController extends Controller
         $request->validate([
             'fecha'       => 'required',
             'descripcion' => 'required',
-            'periodo_id'  => '',
-            'creado_por'  => '',
+            'id_periodo'  => '',
+            'id_usuario'  => '',
         ]);
 
         $administrador = DB::table('usuario')
@@ -35,8 +35,8 @@ class EventosController extends Controller
         DB::table('evento')->insert([
             'fecha'       => $request->fecha,
             'descripcion' => $request->descripcion,
-            'periodo_id'  => $id_periodo,
-            'creado_por'  => $id_admin,
+            'id_periodo'  => $id_periodo,
+            'id_usuario'  => $id_admin,
         ]);
 
         return redirect()->back()->with('success', 'Evento creado correctamente');
@@ -47,8 +47,8 @@ class EventosController extends Controller
         $request->validate([
             'fecha'       => 'required',
             'descripcion' => 'required',
-            'periodo_id'  => '',
-            'creado_por'  => '',
+            'id_periodo'  => '',
+            'id_usuario'  => '',
         ]);
 
         $administrador = DB::table('usuario')
@@ -64,8 +64,8 @@ class EventosController extends Controller
         DB::table('evento')->where('id', $id)->update([
             'fecha'       => $request->fecha,
             'descripcion' => $request->descripcion,
-            'periodo_id'  => $id_periodo,
-            'creado_por'  => $id_admin,
+            'id_periodo'  => $id_periodo,
+            'id_usuario'  => $id_admin,
         ]);
 
         return redirect()->back()->with('success', 'Evento actualizado correctamente');

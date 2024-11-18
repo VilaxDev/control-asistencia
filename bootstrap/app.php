@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin/api/asistencias/register',
             'admin/api/asistencias/update/*',
             'admin/api/datos/update/colaborador/*',
+            'admin/api/justificacion/asistencia/colaborador/*',
             'admin/api/update/token/usuario/*',
             'admin/api/colaborador/login',
 

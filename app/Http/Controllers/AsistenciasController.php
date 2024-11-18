@@ -15,8 +15,8 @@ class AsistenciasController extends Controller
     public function index()
     {
         $asistencias = DB::table('asistencia')
-            ->join('colaborador', 'asistencia.colaborador_id', '=', 'colaborador.id')
-            ->join('usuario', 'colaborador.usuario_id', '=', 'usuario.id')
+            ->join('colaborador', 'asistencia.id_colaborador', '=', 'colaborador.id')
+            ->join('usuario', 'colaborador.id_usuario', '=', 'usuario.id')
             ->select('asistencia.*', 'colaborador.id as colaborador_id', 'usuario.nombre as usuario_nombre')
             ->paginate(10);
 
@@ -43,7 +43,7 @@ class AsistenciasController extends Controller
         $fechaActual = now()->format('Y-m-d');
         // Verificar si ya existe un registro para el colaborador en la fecha actual
         $asistenciaExistente = DB::table('asistencia')
-            ->where('colaborador_id', $request->colaborador_id)
+            ->where('id_colaborador', $request->colaborador_id)
             ->where('fecha', $fechaActual)
             ->first();
 
@@ -59,13 +59,15 @@ class AsistenciasController extends Controller
         try {
             // Insertar la nueva asistencia y obtener su ID
             $asistenciaId = DB::table('asistencia')->insertGetId([
-                'colaborador_id' => $request->colaborador_id,
+                'id_justificacion' => null,
+                'id_colaborador' => $request->colaborador_id,
                 'fecha'          => $fechaActual,
                 'hora_entrada'   => $horaActual,
                 'hora_salida'    => '00:00:00',
                 'tardanza'       => false,
                 'justificada'    => false,
                 'inasistencia'   => false,
+
             ]);
 
             // Retornar la respuesta con el ID de asistencia
@@ -81,47 +83,40 @@ class AsistenciasController extends Controller
 
 
 
-
-
-
     public function update(Request $request, $id)
     {
-        // Verificar si el registro de asistencia existe
-        $asistencia = DB::table('asistencia')->where('id', $id)->first();
+
+        $asistencia = DB::table('asistencia')
+            ->where('id', $id)
+            ->first();
 
         if (!$asistencia) {
             return response()->json(['success' => false, 'message' => 'Registro de asistencia no encontrado.'], 404);
         }
 
-        // Verificar si la hora de salida ya fue registrada (si no es "00:00:00")
         if ($asistencia->hora_salida !== '00:00:00') {
             return response()->json(['success' => false, 'message' => 'Ya se ha registrado la salida para el día de hoy.'], 400);
         }
 
-        // Obtener el colaborador_id de la asistencia
-        $colaboradorId = $asistencia->colaborador_id;
-
-        // Obtener el horario_id de la tabla colaborador
-        $colaborador = DB::table('colaborador')->where('id', $colaboradorId)->first();
+        $colaborador = DB::table('colaborador')
+            ->where('id', $asistencia->id_colaborador)
+            ->first();
 
         if (!$colaborador) {
             return response()->json(['success' => false, 'message' => 'Colaborador no encontrado.'], 404);
         }
 
-        // Obtener el horario de la tabla horario
-        $horario = DB::table('horario')->where('id', $colaborador->horario_id)->first();
+        $horario = DB::table('horario')
+            ->where('id', $colaborador->id_horario)
+            ->first();
 
         if (!$horario) {
             return response()->json(['success' => false, 'message' => 'Horario no encontrado.'], 404);
         }
 
-        // Obtener la hora de salida establecida en el horario
-        $horaSalidaEstablecida = $horario->hora_salida; // Hora de salida según la tabla horario (formato H:i:s)
-
-        // Hora de salida enviada desde el frontend
         $horaSalidaEnviada = $request->input('hora_salida');
+        $horaSalidaEstablecida = $horario->hora_salida;
 
-        // Comparar si la hora de salida enviada es mayor a la hora de salida del horario
         if ($horaSalidaEnviada <= $horaSalidaEstablecida) {
             return response()->json([
                 'type' => 'danger',
@@ -129,29 +124,40 @@ class AsistenciasController extends Controller
             ], 400);
         }
 
-        // Actualizar la hora de salida si la validación es exitosa
         try {
-            DB::table('asistencia')->where('id', $id)->update([
+            // Prepare full update with all original fields
+            $updateData = [
+                'fecha' => $asistencia->fecha,
+                'hora_entrada' => $asistencia->hora_entrada,
                 'hora_salida' => $horaSalidaEnviada,
-                // Otros campos que quieras mantener, como `tardanza`, `justificada`, etc.
-            ]);
+                'inasistencia' => $asistencia->inasistencia,
+                'tardanza' => $asistencia->tardanza,
+                'justificada' => $asistencia->justificada,
+                'id_justificacion' => null,
+                'id_colaborador' => $asistencia->id_colaborador,
+            ];
+
+            // Update attendance record
+            DB::table('asistencia')->where('id', $id)->update($updateData);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Salida registrada exitosamente',
                 'data' => [
                     'id_asistencia' => $id,
-                    'estado' => 'SALIDA_REGISTRADA',
+                    'id_colaborador' => $asistencia->id_colaborador,
+                    'fecha' => $asistencia->fecha,
                     'hora_entrada' => $asistencia->hora_entrada,
                     'hora_salida' => $horaSalidaEnviada,
+                    'estado' => 'SALIDA_REGISTRADA',
                     'puede_registrar' => false,
+                    'id_justificacion' => null,
                 ],
             ], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al actualizar la asistencia: ' . $e->getMessage()], 500);
         }
     }
-
 
     public function show($id)
     {
@@ -197,6 +203,7 @@ class AsistenciasController extends Controller
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
+            'imei' => 'required'
         ]);
 
         // Buscar el usuario por correo electrónico
@@ -212,19 +219,38 @@ class AsistenciasController extends Controller
             return response()->json(['error' => 'Contraseña incorrecta'], 401);
         }
 
-        // Verificar si ya hay un token activo
-        if (!empty($usuario->token)) {
+        // Verificación y manejo del IMEI
+        if (empty($usuario->imei)) {
+            // Primera vez - guardar el IMEI manteniendo todos los campos
+            DB::table('usuario')->where('id', $usuario->id)->update([
+                'nombre' => $usuario->nombre,
+                'apellidos' => $usuario->apellidos,
+                'email' => $usuario->email,
+                'password' => $usuario->password,
+                'rol' => $usuario->rol,
+                'imei' => $request->imei,  // Actualizamos solo el IMEI
+                'fecha_creacion' => $usuario->fecha_creacion,
+            ]);
+        } else if ($usuario->imei !== $request->imei) {
+            // Si ya tiene un IMEI y es diferente al enviado
             return response()->json(['error' => 'Ya se ha iniciado sesión en otro dispositivo'], 409);
+        } else {
+            // Si el IMEI es igual al registrado, actualizar para mantener el registro
+            DB::table('usuario')->where('id', $usuario->id)->update([
+                'nombre' => $usuario->nombre,
+                'apellidos' => $usuario->apellidos,
+                'email' => $usuario->email,
+                'password' => $usuario->password,
+                'rol' => $usuario->rol,
+                'imei' => $usuario->imei,  // Mantenemos el mismo IMEI
+                'fecha_creacion' => $usuario->fecha_creacion,
+            ]);
         }
 
-        // Generar un nuevo token único para el usuario
-        $token = Str::random(60);
 
-        // Guardar el token en la base de datos
-        DB::table('usuario')->where('id', $usuario->id)->update(['token' => $token]);
 
         // Buscar el colaborador asociado al usuario
-        $colaborador = DB::table('colaborador')->where('usuario_id', $usuario->id)->first();
+        $colaborador = DB::table('colaborador')->where('id_usuario', $usuario->id)->first();
 
         // Si el colaborador no se encuentra
         if (!$colaborador) {
@@ -232,7 +258,7 @@ class AsistenciasController extends Controller
         }
 
         // Buscar el horario asociado al colaborador
-        $horario = DB::table('horario')->where('id', $colaborador->horario_id)->first();
+        $horario = DB::table('horario')->where('id', $colaborador->id_horario)->first();
 
         // Si el horario no se encuentra
         if (!$horario) {
@@ -260,7 +286,7 @@ class AsistenciasController extends Controller
 
         // Buscar los eventos asociados al periodo actual
         $eventos = DB::table('evento')
-            ->where('periodo_id', $periodo->id)
+            ->where('id_periodo', $periodo->id)
             ->get();
 
         // Preparar los datos de respuesta
@@ -270,7 +296,6 @@ class AsistenciasController extends Controller
             'apellidos' => $usuario->apellidos,
             'email' => $usuario->email,
             'rol' => $usuario->rol,
-            'token' => $token, // Añadir el token generado a la respuesta
         ];
 
         $colaboradorData = [
@@ -291,8 +316,6 @@ class AsistenciasController extends Controller
         $periodoData = [
             'id' => $periodo->id,
             'anio' => $periodo->anio,
-            'fecha_inicio' => $periodo->fecha_inicio,
-            'fecha_fin' => $periodo->fecha_fin,
         ];
 
         $eventosData = $eventos->map(function ($evento) {
@@ -313,8 +336,6 @@ class AsistenciasController extends Controller
         ], 200);
     }
 
-
-
     public function updateToken($id)
     {
         try {
@@ -331,18 +352,73 @@ class AsistenciasController extends Controller
                 'nombre' => $usuario->nombre,
                 'apellidos' => $usuario->apellidos,
                 'email' => $usuario->email,
-                'token' => '',
+                'imei' => null,
                 'password' => $usuario->password,
                 'rol' => $usuario->rol,
                 'fecha_creacion' => $usuario->fecha_creacion,  // Mantener el resto de campos sin cambios
             ]);
 
-            return response()->json(['message' => 'Token actualizado correctamente'], 200);
+            return response()->json(['message' => 'Imei actualizado correctamente'], 200);
         } catch (\Exception $e) {
-            Log::error('Error al actualizar el token: ' . $e->getMessage());
+            Log::error('Error al actualizar el imei: ' . $e->getMessage());
 
-            return response()->json(['error' => 'Error al actualizar el token: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Error al actualizar el imei: ' . $e->getMessage()], 500);
         }
+    }
+
+
+    public function JustificacionAsistencia($id, Request $request)
+    {
+        // Verificar si el colaborador existe
+        $colaborador = DB::table('colaborador')->where('id', $id)->first();
+
+        if (!$colaborador) {
+            // Retornar una respuesta en caso de que no se encuentre el colaborador
+            return response()->json([
+                'message' => 'El colaborador no existe.',
+                'type' => 'danger'  // Tipo de mensaje para error
+            ], 404);
+        }
+
+        // Verificar si ya existe una justificación para la fecha actual
+        $fechaActual = now()->toDateString();
+        $existingJustificacion = DB::table('asistencia')
+            ->where('id_colaborador', $id)
+            ->where('fecha', $fechaActual)
+            ->where('justificada', true)  // Aseguramos que sea una justificación válida
+            ->first();
+
+        if ($existingJustificacion) {
+            // Si ya existe una justificación para la fecha actual
+            return response()->json([
+                'message' => 'Ya existe una justificación para la fecha de hoy.',
+                'type' => 'danger'  // Tipo de mensaje para error
+            ], 404);
+        }
+
+        // Insertar datos en la tabla 'justificacion'
+        $idJustificacion = DB::table('justificacion')->insertGetId([
+            'motivo'      => $request->input('motivo'),
+            'descripcion' => $request->input('descripcion'),
+        ]);
+
+        // Registrar los datos en la tabla 'asistencia'
+        DB::table('asistencia')->insert([
+            'id_colaborador' => $id,
+            'id_justificacion' => $idJustificacion,
+            'fecha'          => $fechaActual,
+            'hora_entrada'   => '00:00:00',
+            'hora_salida'    => '00:00:00',
+            'tardanza'       => false,
+            'justificada'    => true,
+            'inasistencia'   => false,
+        ]);
+
+        // Respuesta exitosa
+        return response()->json([
+            'message' => 'Justificación de asistencia registrada con éxito.',
+            'type' => 'success'  // Tipo de mensaje para éxito
+        ], 200);
     }
 
 
@@ -357,7 +433,7 @@ class AsistenciasController extends Controller
         }
 
         // Buscar el usuario asociado al colaborador
-        $usuario = DB::table('usuario')->where('id', $colaborador->usuario_id)->first();
+        $usuario = DB::table('usuario')->where('id', $colaborador->id_usuario)->first();
 
         // Si el usuario no se encuentra
         if (!$usuario) {
@@ -365,7 +441,7 @@ class AsistenciasController extends Controller
         }
 
         // Buscar el horario asociado al colaborador
-        $horario = DB::table('horario')->where('id', $colaborador->horario_id)->first();
+        $horario = DB::table('horario')->where('id', $colaborador->id_horario)->first();
 
         // Si el horario no se encuentra
         if (!$horario) {
@@ -394,10 +470,10 @@ class AsistenciasController extends Controller
 
         // Buscar los eventos asociados al periodo actual
         $eventos = DB::table('evento')
-            ->where('periodo_id', $periodo->id)
+            ->where('id_periodo', $periodo->id)
             ->get();
 
-        $empresa = DB::table('empresa')->first();
+
 
         // Preparar los datos del usuario para la respuesta
         $usuarioData = [
@@ -427,8 +503,6 @@ class AsistenciasController extends Controller
         $periodoData = [
             'id' => $periodo->id,
             'anio' => $periodo->anio,
-            'fecha_inicio' => $periodo->fecha_inicio,
-            'fecha_fin' => $periodo->fecha_fin,
         ];
 
         $eventosData = $eventos->map(function ($evento) {

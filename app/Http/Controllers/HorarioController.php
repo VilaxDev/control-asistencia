@@ -28,7 +28,7 @@ class HorarioController extends Controller
             'hora_salida' => 'required',
             'dias_laborales' => 'required',
             'fecha_creacion' => '',
-            'creado_por' => '',
+            'id_usuario' => '',
         ]);
         // Obtener el usuario por su ID
         $usuario = DB::table('usuario')->first('id');
@@ -43,7 +43,7 @@ class HorarioController extends Controller
             'hora_salida' => $request->hora_salida,
             'dias_laborales' => $diasLaboralesJson,
             'fecha_creacion' => Carbon::now(),
-            'creado_por' => $id_usuario,
+            'id_usuario' => $id_usuario,
         ]);
 
         return redirect('admin/horarios')->with('success', 'El horario creado exitosamente.');
@@ -56,7 +56,7 @@ class HorarioController extends Controller
             'hora_entrada' => 'required',
             'hora_salida' => 'required',
             'dias_laborales' => 'required',
-            'creado_por' => '',
+            'id_usuario' => '',
         ]);
         // Obtener el usuario por su ID
         $usuario = DB::table('usuario')->first('id');
@@ -70,7 +70,7 @@ class HorarioController extends Controller
             'hora_entrada' => $request->hora_entrada,
             'hora_salida' => $request->hora_salida,
             'dias_laborales' => $diasLaboralesJson,
-            'creado_por' => $id_usuario,
+            'id_usuario' => $id_usuario,
         ]);
 
         return redirect('admin/horarios')->with('success', 'El horario actualizado exitosamente.');

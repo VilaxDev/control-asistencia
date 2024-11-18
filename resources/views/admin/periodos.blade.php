@@ -17,20 +17,6 @@
                     <div class="modal-body">
                         <!-- Campo para ingresar el año -->
                         <x-year-selector name="anio" label="Seleccione el Año" />
-
-                        <!-- Campo para seleccionar la fecha de inicio -->
-                        <div class="mb-3">
-                            <label for="fecha_inicio" class="form-label">Fecha de Inicio del Periodo</label>
-                            <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" required>
-                            <div class="form-text">Seleccione la fecha en que comenzará el periodo.</div>
-                        </div>
-
-                        <!-- Campo para seleccionar la fecha de fin -->
-                        <div class="mb-3">
-                            <label for="fecha_fin" class="form-label">Fecha de Fin del Periodo</label>
-                            <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" required>
-                            <div class="form-text">Seleccione la fecha en que finalizará el periodo.</div>
-                        </div>
                     </div>
 
                     <!-- Botones de acción -->
@@ -75,24 +61,7 @@
                                     Activo
                                 </span>
                             </div>
-                            <div class="bg-light rounded-3 p-3 mb-4">
-                                <div class="mb-3">
-                                    <div class="text-muted mb-1" style="font-size: 0.9rem;">
-                                        <i class="ti ti-calendar-plus me-2"></i>Inicio
-                                    </div>
-                                    <div class="fw-semibold" style="color: #2c3e50;">
-                                        {{ \Carbon\Carbon::parse($periodo->fecha_inicio)->format('d/m/Y') }}
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="text-muted mb-1" style="font-size: 0.9rem;">
-                                        <i class="ti ti-calendar-minus me-2"></i>Fin
-                                    </div>
-                                    <div class="fw-semibold" style="color: #2c3e50;">
-                                        {{ \Carbon\Carbon::parse($periodo->fecha_fin)->format('d/m/Y') }}
-                                    </div>
-                                </div>
-                            </div>
+
                             <div class="d-flex gap-2 justify-content-center">
                                 <!-- Botón Editar -->
                                 <button class="btn btn-light-warning" data-bs-toggle="modal"
@@ -119,23 +88,10 @@
                                                         <input type="number" class="form-control" id="anio"
                                                             name="anio" value="{{ $periodo->anio }}" required>
                                                     </div>
-                                                    <div class="mb-3">
-                                                        <label for="fecha_inicio" class="form-label">Fecha de
-                                                            inicio</label>
-                                                        <input type="date" class="form-control" id="fecha_inicio"
-                                                            name="fecha_inicio" value="{{ $periodo->fecha_inicio }}"
-                                                            required>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label for="fecha_fin" class="form-label">Fecha de
-                                                            fin</label>
-                                                        <input type="date" class="form-control" id="fecha_fin"
-                                                            name="fecha_fin" value="{{ $periodo->fecha_fin }}" required>
-                                                    </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-danger"
-                                                        data-bs-dismiss="modal"><i class="fa fa-close"></i>
+                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i
+                                                            class="fa fa-close"></i>
                                                         Cancelar</button>
                                                     <button type="submit" class="btn btn-primary"><i
                                                             class="fa fa-save"></i> Guardar

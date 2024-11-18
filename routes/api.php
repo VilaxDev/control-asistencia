@@ -20,3 +20,5 @@ Route::put('/admin/api/asistencias/tarde', [AsistenciasController::class, 'updat
 Route::get('/admin/api/asistencias/estado/{colaboradorId}', [AsistenciasController::class, 'verificarEstadoActual']);
 Route::post('/admin/api/asistencias/register', [AsistenciasController::class, 'register']);
 Route::put('/admin/api/asistencias/update/{id}', [AsistenciasController::class, 'update']);
+
+Route::post('/admin/api/justificacion/asistencia/colaborador/{id}', [AsistenciasController::class, 'JustificacionAsistencia']);
