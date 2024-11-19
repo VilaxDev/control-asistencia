@@ -28,6 +28,7 @@ class AsistenciasController extends Controller
         $users = DB::table('usuario')->get();
         return response()->json($users, 200);
     }
+
     public function register(Request $request)
     {
         // Buscar el colaborador por ID
@@ -40,7 +41,12 @@ class AsistenciasController extends Controller
             ], 404);
         }
 
-        $fechaActual = now()->format('Y-m-d');
+        $fechaActual = $request->fecha; // Fecha enviada en el request
+        $horaEntradaRequest = $request->hora_entrada; // Hora enviada en el request
+
+        // Convertir la hora enviada a un objeto Carbon
+        $horaActual = \Carbon\Carbon::createFromFormat('H:i:s', $horaEntradaRequest);
+
         // Verificar si ya existe un registro para el colaborador en la fecha actual
         $asistenciaExistente = DB::table('asistencia')
             ->where('id_colaborador', $request->colaborador_id)
@@ -54,27 +60,60 @@ class AsistenciasController extends Controller
             ], 400);
         }
 
-        $horaActual = now()->format('H:i:s');
+        // Buscar el horario del colaborador    
+        $horario = DB::table('horario')->where('id', $colaborador->id_horario)->first();
+
+        if (!$horario) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Horario no encontrado para el colaborador.',
+            ], 404);
+        }
+
+        // Convertir hora_entrada del horario a un objeto Carbon
+        $horaEntradaHorario = \Carbon\Carbon::createFromFormat('H:i:s', $horario->hora_entrada);
+
+        // Calcular los límites de tiempo para las validaciones
+        $horaInicioPermitida = $horaEntradaHorario->copy()->subMinutes(20); // 10 minutos antes de la hora establecida
+        $horaLimiteTardanza = $horaEntradaHorario->copy()->addMinutes(10);  // 10 minutos después de la hora establecida
+
+        // Validar la hora enviada
+        if ($horaActual->lt($horaInicioPermitida)) {
+            return response()->json([
+                'type' => 'danger',
+                'message' => 'No puedes registrar asistencia antes del tiempo permitido.',
+            ], 400);
+        }
+
+        $tardanza = false;
+        $inasistencia = false;
+
+        if ($horaActual->gt($horaLimiteTardanza)) {
+            // Si es mayor a 10 minutos, marcar como tardanza o inasistencia según lo deseado
+            $tardanza = true;
+            if ($horaActual->gt($horaEntradaHorario->copy()->addMinutes(30))) {
+                $inasistencia = true;
+            }
+        }
 
         try {
-            // Insertar la nueva asistencia y obtener su ID
+            // Insertar la nueva asistencia
             $asistenciaId = DB::table('asistencia')->insertGetId([
                 'id_justificacion' => null,
                 'id_colaborador' => $request->colaborador_id,
                 'fecha'          => $fechaActual,
-                'hora_entrada'   => $horaActual,
+                'hora_entrada'   => $horaActual->format('H:i:s'),
                 'hora_salida'    => '00:00:00',
-                'tardanza'       => false,
+                'tardanza'       => $tardanza,
                 'justificada'    => false,
-                'inasistencia'   => false,
-
+                'inasistencia'   => $inasistencia,
             ]);
 
             // Retornar la respuesta con el ID de asistencia
             return response()->json([
                 'type' => 'success',
                 'message' => 'Asistencia registrada exitosamente',
-                'id_asistencia' => $asistenciaId, // Usar el ID de asistencia generado
+                'id_asistencia' => $asistenciaId,
             ], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al registrar la asistencia: ' . $e->getMessage()], 500);
@@ -82,7 +121,7 @@ class AsistenciasController extends Controller
     }
 
 
-
+    //Funcion para registar las salida de asistencia
     public function update(Request $request, $id)
     {
 
@@ -194,7 +233,6 @@ class AsistenciasController extends Controller
             'horario' => $horario,
         ]);
     }
-
 
 
     public function login(Request $request)
