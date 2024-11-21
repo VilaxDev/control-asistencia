@@ -30,9 +30,13 @@ class HorarioController extends Controller
             'fecha_creacion' => '',
             'id_usuario' => '',
         ]);
+
         // Obtener el usuario por su ID
-        $usuario = DB::table('usuario')->first('id');
-        $id_usuario = $usuario->id;
+        $administrador = DB::table('usuario')
+            ->where('rol', 'Administrador')
+            ->first();
+
+        $id_admin = $administrador->id;
 
         $diasLaborales = $request->input('dias_laborales');
         $diasLaboralesJson = json_encode($diasLaborales);
@@ -43,7 +47,7 @@ class HorarioController extends Controller
             'hora_salida' => $request->hora_salida,
             'dias_laborales' => $diasLaboralesJson,
             'fecha_creacion' => Carbon::now(),
-            'id_usuario' => $id_usuario,
+            'id_usuario' => $id_admin,
         ]);
 
         return redirect('admin/horarios')->with('success', 'El horario creado exitosamente.');
@@ -58,9 +62,13 @@ class HorarioController extends Controller
             'dias_laborales' => 'required',
             'id_usuario' => '',
         ]);
-        // Obtener el usuario por su ID
-        $usuario = DB::table('usuario')->first('id');
-        $id_usuario = $usuario->id;
+
+
+        $administrador = DB::table('usuario')
+            ->where('rol', 'Administrador')
+            ->first();
+
+        $id_admin = $administrador->id;
 
         $diasLaborales = $request->input('dias_laborales');
         $diasLaboralesJson = json_encode($diasLaborales);
@@ -70,9 +78,26 @@ class HorarioController extends Controller
             'hora_entrada' => $request->hora_entrada,
             'hora_salida' => $request->hora_salida,
             'dias_laborales' => $diasLaboralesJson,
-            'id_usuario' => $id_usuario,
+            'id_usuario' => $id_admin,
         ]);
 
         return redirect('admin/horarios')->with('success', 'El horario actualizado exitosamente.');
+    }
+
+    public function delete($id)
+    {
+        // Verificar si el horario está asociado a algún colaborador
+        $horarioAsociado = DB::table('colaborador')
+            ->where('id_horario', $id)
+            ->exists();
+
+        if ($horarioAsociado) {
+            return redirect('admin/horarios')->with('danger', 'No se puede eliminar el horario porque está asociado a un colaborador.');
+        }
+
+        // Si no está asociado, proceder a eliminar
+        DB::table('horario')->where('id', $id)->delete();
+
+        return redirect('admin/horarios')->with('success', 'El horario se eliminó exitosamente.');
     }
 }

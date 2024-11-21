@@ -16,7 +16,6 @@ class ColaboradoresController extends Controller
             ->join('horario', 'colaborador.id_horario', '=', 'horario.id')
             ->where('usuario.rol', 'Colaborador')
             ->select(
-                'usuario.id',
                 'usuario.nombre',
                 'usuario.apellidos',
                 'usuario.email',
@@ -24,7 +23,7 @@ class ColaboradoresController extends Controller
                 'usuario.rol',
                 'usuario.fecha_creacion',
                 'colaborador.estado',
-                'colaborador.id',
+                'colaborador.id as colaborador_id',
                 'colaborador.fecha_inicio',
                 'colaborador.fecha_fin',
                 'colaborador.tipo_contrato',
@@ -33,14 +32,10 @@ class ColaboradoresController extends Controller
                 'colaborador.id_usuario',
                 'horario.nom_horario',
             )->paginate(8);
-
         $tipo_colaborador = DB::table('tipo_colaborador')->get();
         $horarios = DB::table('horario')->get();
         return view('admin.colaboradores', compact('colaboradores', 'tipo_colaborador', 'horarios',));
     }
-
-
-
 
     public function create(Request $request)
     {
@@ -115,7 +110,7 @@ class ColaboradoresController extends Controller
         ];
 
         // Actualizar los datos del usuario
-        DB::table('usuario')->where('id', $colaborador->usuario_id)->update($usuarioData);
+        DB::table('usuario')->where('id', $colaborador->id_usuario)->update($usuarioData);
 
         // Verificar que el usuario creador tiene el rol de Administrador
         $administrador = DB::table('usuario')->where('rol', 'Administrador')->first();
@@ -128,7 +123,7 @@ class ColaboradoresController extends Controller
             'estado' => $request->estado,
             'tipo_contrato' => $request->tipo_contrato,
             'tipo_colaborador' => $request->tipo_colaborador,
-            'id_usuario' => $colaborador->usuario_id, // Mantener el usuario_id original
+            'id_usuario' => $colaborador->id_usuario,
             'id_horario' => $request->horario_id,
             'creado_por' => $id_admin,
         ];
@@ -138,5 +133,40 @@ class ColaboradoresController extends Controller
 
         // Redirigir a la lista de colaboradores con un mensaje de éxito
         return redirect('admin/colaboradores')->with('success', 'Colaborador actualizado con éxito');
+    }
+
+    public function show($id)
+    {
+        // Obtener los detalles del colaborador específico desde la tabla colaborador
+        $colaborador = DB::table('colaborador')
+            ->join('usuario', 'colaborador.id_usuario', '=', 'usuario.id') // Relación con usuario
+            ->join('horario', 'colaborador.id_horario', '=', 'horario.id') // Relación con horario
+            ->where('colaborador.id', $id) // Filtrar por el id_usuario
+            ->where('usuario.rol', 'Colaborador') // Asegurarse de que el rol sea "Colaborador"
+            ->select(
+                'usuario.nombre',
+                'usuario.apellidos',
+                'usuario.email',
+                'usuario.password',
+                'usuario.rol',
+                'usuario.fecha_creacion',
+                'colaborador.estado',
+                'colaborador.id as cola_id',
+                'colaborador.fecha_inicio',
+                'colaborador.fecha_fin',
+                'colaborador.tipo_contrato',
+                'colaborador.tipo_colaborador',
+                'colaborador.id_horario',
+                'colaborador.id_usuario',
+                'horario.nom_horario'
+            )
+            ->first();
+
+        // Verificar si el colaborador existe
+        if (!$colaborador) {
+            return redirect('admin/colaboradores')->with('error', 'Colaborador no encontrado');
+        }
+
+        return view('admin.colaborador_show', compact('colaborador'));
     }
 }

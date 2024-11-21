@@ -1,16 +1,15 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Modernize Dashboard</title>
+    <title>Dashboard</title>
     <link rel="shortcut icon" type="image/png" href="{{ url('/assets/images/logos/favicon.png') }}" />
     <link rel="stylesheet" href="{{ url('/assets/css/styles.min.css') }} " />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- Carga de Chart.js desde el CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
@@ -24,8 +23,9 @@
             <!-- Sidebar scroll-->
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
-                    <a href="./index.html" class="text-nowrap logo-img">
-                        <img src="{{ url('/assets/images/logos/dark-logo.svg') }}" width="180" alt="" />
+                    <a href="https://powercode.pe/" class="text-nowrap logo-img">
+                        <img src="{{ url('/assets/images/logos/power-code-logo.png') }}" width="180"
+                            alt="" />
                     </a>
                     <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
                         <i class="ti ti-x fs-8"></i>

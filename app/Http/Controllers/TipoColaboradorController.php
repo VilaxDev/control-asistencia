@@ -9,7 +9,7 @@ class TipoColaboradorController extends Controller
 {
     public function index()
     {
-        $tipo_colaborador = DB::table('tipo_colaborador')->paginate(4);
+        $tipo_colaborador = DB::table('tipo_colaborador')->paginate(3);
         return view('admin.tipos_colaborador', compact('tipo_colaborador'));
     }
 
@@ -45,14 +45,14 @@ class TipoColaboradorController extends Controller
             'nombre'      => 'required',
             'imagen'      => 'required',
             'descripcion' => 'required',
-            'creado_por	' => '',
+            'id_usuario	' => '',
         ]);
 
         DB::table('tipo_colaborador')->where('id', $id)->update([
             'nombre'      => $request->nombre,
             'imagen'      => $request->imagen,
             'descripcion' => $request->descripcion,
-            'creado_por'  => $id_usuario
+            'id_usuario'  => $id_usuario
         ]);
 
         return redirect('admin/tipos-colaborador')->with('success', 'Tipo colaborador actualizado exitosamente');

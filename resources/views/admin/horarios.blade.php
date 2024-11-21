@@ -78,39 +78,6 @@
         </div>
     </div>
 
-    <style>
-        .section-group {
-            position: relative;
-        }
-
-        .modal-header {
-            border-bottom: 3px solid #0d6efd;
-        }
-
-        .dias-laborales {
-            border: 1px solid #dee2e6;
-        }
-
-        .form-label {
-            color: #444;
-        }
-
-        .input-group-text {
-            background-color: #f8f9fa;
-        }
-
-        .text-primary {
-            font-weight: 600;
-        }
-
-        small.text-muted {
-            font-size: 0.75rem;
-        }
-
-        .modal-footer {
-            background-color: #f8f9fa;
-        }
-    </style>
     <h1 class="text-center">Gestión de horarios ⚡</h1>
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -118,40 +85,39 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
+    @if (session('danger'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('danger') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
 
 
     <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalCreateUser">
-        Crear horario <i class="ti ti-circle-plus"></i>
+        Crear horario <i class="ti ti-plus"></i>
     </button>
 
     <div class="row">
         @foreach ($horarios as $horario)
             <div class="col-md-4 mb-4">
-                <div class="card p-4"
-                    style="border-radius: 15px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); background-color: #f9f9f9;">
+                <div class="card p-4" style="border-radius: 10px; border: 1px solid #d8d9da;">
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <h5 class="mb-1" style="font-weight: 600; color: #333;">{{ $horario->nom_horario }}</h5>
                         </div>
-                        <i class="ti ti-calendar-event text-dark" style="font-size: 50px"></i>
+                        <i class="ti ti-calendar-event" style="font-size: 50px; color: rgb(75, 75, 75);"></i>
                     </div>
-
-                    <hr style="border: 1px solid #e5e5e5;">
-
-                    <div>
+                    <div class="mb-4">
                         <p class="mb-1">Entrada:
-                            <span class="badge bg-success-subtle text-success">
+                            <span class="badge bg-success-subtle text-success rounded-pill">
                                 {{ date('g:i A', strtotime($horario->hora_entrada)) }}</span>
                         </p>
                         <p class="mb-1">Salida:
-                            <span class="badge bg-danger-subtle text-danger">
+                            <span class="badge bg-danger-subtle text-danger rounded-pill">
                                 {{ date('g:i A', strtotime($horario->hora_salida)) }}</span>
                         </p>
                     </div>
-
-                    <hr style="border: 1px solid #e5e5e5;">
-
-                    <div class="d-flex flex-wrap gap-2 mb-3">
+                    <div class="d-flex flex-wrap gap-2 mb-5">
                         @php
                             $diasLaborales = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
                             $diasSeleccionados = json_decode($horario->dias_laborales, true);
@@ -162,20 +128,18 @@
 
                         @foreach ($diasLaborales as $dia)
                             @if (in_array($dia, $diasSeleccionados))
-                                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
-                                    style="width: 30px; height: 30px; font-size: 14px;">
+                                <div class="rounded-circle text-primary d-flex align-items-center justify-content-center"
+                                    style="width: 30px; height: 30px; font-size: 14px; background-color: #b2c9ec6c;">
                                     {{ strtoupper(substr($dia, 0, 1)) }}
                                 </div>
                             @endif
                         @endforeach
                     </div>
-
-                    <hr style="border: 1px solid #e5e5e5;">
-
                     <div class="d-flex gap-2 justify-content-center">
-                        <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal"
+
+                        <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal"
                             data-bs-target="#modalEditUser{{ $horario->id }}">
-                            <i class="ti ti-pencil"></i>
+                            <i class="ti ti-edit"></i> Editar
                         </button>
 
                         <!-- Modal para Editar Horario Laboral -->
@@ -273,9 +237,39 @@
                         </div>
 
 
-                        <button type="button" class="btn btn-outline-danger">
-                            <i class="ti ti-trash"></i> <!-- Icono de eliminar -->
+                        <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal"
+                            data-bs-target="#modalDeleteHorario{{ $horario->id }}">
+                            <i class="ti ti-trash"></i> Eliminar
                         </button>
+
+                        <div class="modal fade" id="modalDeleteHorario{{ $horario->id }}" tabindex="-1"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        ¿Estás seguro de que deseas eliminar el horario
+                                        <strong>{{ $horario->nom_horario }}</strong>?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i
+                                                class="ti ti-square-x"></i> Cancelar</button>
+                                        <form action="{{ route('horarios.delete', $horario->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger">
+                                                <i class="ti ti-trash"></i> Eliminar
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 

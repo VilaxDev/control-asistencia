@@ -64,10 +64,12 @@ Route::middleware('auth:admin,supervisor')->group(function () {
     Route::get('admin/horarios', [HorarioController::class, 'index'])->name('horarios.index');
     Route::post('admin/horarios/create', [HorarioController::class, 'create'])->name('horarios.create');
     Route::put('admin/horarios/update/{id}', [HorarioController::class, 'update'])->name('horarios.update');
+    Route::delete('admin/horarios/delete/{id}', [HorarioController::class, 'delete'])->name('horarios.delete');
     //Colaboradores
     Route::get('admin/colaboradores', [ColaboradoresController::class, 'index'])->name('colaboradores.index');
     Route::post('admin/colaboradores/create', [ColaboradoresController::class, 'create'])->name('colaboradores.create');
     Route::put('admin/colaboradores/update/{id}', [ColaboradoresController::class, 'update'])->name('colaborador.update');
+    Route::get('admin/colaboradores/show/{id}', [ColaboradoresController::class, 'show'])->name('colaboradores.show');
 
     //Asistencias
     Route::get('admin/asistencias', [AsistenciasController::class, 'index'])->name('asistencias.index');

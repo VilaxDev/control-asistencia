@@ -21,10 +21,9 @@
 
                     <!-- Botones de acción -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fa fa-close"></i>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="ti ti-square-x"></i>
                             Cancelar</button>
-                        <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Guardar
-                            Periodo</button>
+                        <button type="submit" class="btn btn-primary"><i class="ti ti-device-floppy"></i> Guardar</button>
                     </div>
                 </form>
             </div>
@@ -39,14 +38,22 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
+        @if (session('danger'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ session('danger') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
         @error('anio')
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 {{ $message }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @enderror
-        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">Crear
-            periodo <i class="ti ti-circle-plus"></i></button>
+
+
+        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">
+            Crear periodo <i class="ti ti-plus"></i></button>
         <div class="row">
             @foreach ($periodos as $periodo)
                 <div class="col-md-4 mb-3">
@@ -60,55 +67,22 @@
                                 <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">
                                     Activo
                                 </span>
+
                             </div>
+                            <p class="mb-2">
+                                <strong>Fecha de Inicio:</strong> {{ $periodo->anio }}-01-01
+                            </p>
+                            <p class="mb-4">
+                                <strong>Fecha de Fin:</strong> {{ $periodo->anio }}-12-31
+                            </p>
 
                             <div class="d-flex gap-2 justify-content-center">
-                                <!-- Botón Editar -->
-                                <button class="btn btn-light-warning" data-bs-toggle="modal"
-                                    data-bs-target="#editModal-{{ $periodo->id }}">
-                                    <i class="ti ti-edit me-1"></i>
-                                    Editar
-                                </button>
-                                <!-- Modal para editar -->
-                                <div class="modal fade" id="editModal-{{ $periodo->id }}" tabindex="-1"
-                                    aria-labelledby="editModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="editModalLabel">Editar Periodo</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
-                                            </div>
-                                            <form action="{{ route('periodos.update', $periodo->id) }}" method="POST">
-                                                @csrf
-                                                @method('PUT')
-                                                <div class="modal-body">
-                                                    <div class="mb-3">
-                                                        <label for="anio" class="form-label">Año del Periodo</label>
-                                                        <input type="number" class="form-control" id="anio"
-                                                            name="anio" value="{{ $periodo->anio }}" required>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i
-                                                            class="fa fa-close"></i>
-                                                        Cancelar</button>
-                                                    <button type="submit" class="btn btn-primary"><i
-                                                            class="fa fa-save"></i> Guardar
-                                                        Cambios</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-
                                 <!-- Botón para abrir el modal -->
-                                <button type="button" class="btn btn-light-danger" data-bs-toggle="modal"
+                                <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal"
                                     data-bs-target="#deleteModal-{{ $periodo->id }}">
                                     <i class="ti ti-trash me-1"></i>
                                     Eliminar
                                 </button>
-
                                 <!-- Modal de confirmación -->
                                 <div class="modal fade" id="deleteModal-{{ $periodo->id }}" tabindex="-1"
                                     aria-labelledby="deleteModalLabel-{{ $periodo->id }}" aria-hidden="true">
@@ -123,16 +97,19 @@
                                             </div>
                                             <div class="modal-body">
                                                 ¿Estás seguro de que deseas eliminar el periodo
-                                                <strong>{{ $periodo->anio }}</strong>? Esta acción no se puede deshacer.
+                                                <strong>{{ $periodo->anio }}</strong>?
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Cancelar</button>
-                                                <form action="{{ route('periodos.delete', $periodo->id) }}"
-                                                    method="POST" class="d-inline">
+                                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i
+                                                        class="ti ti-square-x"></i>
+                                                    Cancelar</button>
+                                                <form action="{{ route('periodos.delete', $periodo->id) }}" method="POST"
+                                                    class="d-inline">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                                                    <button type="submit" class="btn btn-danger"><i
+                                                            class="ti ti-trash"></i>
+                                                        Eliminar</button>
                                                 </form>
                                             </div>
                                         </div>
@@ -145,7 +122,6 @@
                 </div>
             @endforeach
         </div>
-
         {{ $periodos->links('pagination::bootstrap-5') }}
     </div>
 @endsection

@@ -159,7 +159,7 @@ class AsistenciasController extends Controller
         if ($horaSalidaEnviada <= $horaSalidaEstablecida) {
             return response()->json([
                 'type' => 'danger',
-                'message' => 'La hora de salida registrada debe ser mayor a la hora de salida establecida en el horario.',
+                'message' => 'La hora de salida debe ser superior a la hora establecida en el horario.',
             ], 400);
         }
 

@@ -72,7 +72,15 @@ class PeriodosController extends Controller
 
     public function delete($id)
     {
+        // Verificar si el periodo tiene eventos asociados
+        $eventosAsociados = DB::table('evento')->where('id_periodo', $id)->exists();
+
+        if ($eventosAsociados) {
+            return redirect()->back()->with('danger', 'No se puede eliminar el periodo porque tiene eventos asociados.');
+        }
+
+        // Eliminar el periodo si no tiene eventos asociados
         DB::table('periodo')->where('id', $id)->delete();
-        return redirect()->back()->with('success', 'Periodo eliminado correctamente');
+        return redirect()->back()->with('success', 'Periodo eliminado correctamente.');
     }
 }

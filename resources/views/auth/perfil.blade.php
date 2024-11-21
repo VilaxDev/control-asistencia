@@ -33,9 +33,9 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            Cerrar
+                            <i class="ti ti-square-x"></i> Cancelar
                         </button>
-                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <button type="submit" class="btn btn-primary"> <i class="ti ti-device-floppy"></i> Guardar</button>
                     </div>
                 </form>
             </div>

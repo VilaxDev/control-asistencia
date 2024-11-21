@@ -108,33 +108,38 @@
     @endif
 
     <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#modalCreateUser">
-        Crear Tipo <i class="ti ti-circle-plus"></i>
+        Crear Tipo <i class="ti ti-plus"></i>
     </button>
     <div class="row">
         @foreach ($tipo_colaborador as $tipo)
-            <div class="col-md-3 mb-4">
-                <div class="card" style="box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 mb-0" style="box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);">
                     <div class="card-header text-white text-center">
-                        <h5 class="card-title">{{ $tipo->nombre }}</h5>
                         <div class="text-center">
                             <img src="{{ $tipo->imagen }}" alt="{{ $tipo->nombre }}" class="img-fluid rounded-circle"
                                 style="height: 150px; object-fit: cover;">
                         </div>
                     </div>
+                    <div class="card-body">
+                        <h5 class="text-center"><strong>{{ $tipo->nombre }}</strong> </h5>
+                        <p class="text-center"
+                            style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.5em; max-height: 3em;">
+                            {{ $tipo->descripcion }}
+                        </p>
 
-                    <div class="" style="padding-left: 30px; padding-right: 30px; padding-bottom: 30px;">
-                        <p class="card-text truncate">{{ $tipo->descripcion }}</p>
-                        <div class="d-flex gap-2 justify-content-center mt-3">
-                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+
+                        <div class="d-flex gap-2 justify-content-center ">
+                            <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal"
                                 data-bs-target="#modalEditUser{{ $tipo->id }}">
-                                <i class="ti ti-pencil"></i>
+                                <i class="ti ti-edit"></i> Editar
                             </button>
-                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                            <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal"
                                 data-bs-target="#modalDelete{{ $tipo->id }}">
-                                <i class="ti ti-trash"></i>
+                                <i class="ti ti-trash"></i> Eliminar
                             </button>
                         </div>
                     </div>
+
                 </div>
             </div>
             <!--Modal edit -->

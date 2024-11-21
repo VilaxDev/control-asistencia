@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    <!-- Modal para crear evento -->
+    <!-- Modal para crear -->
     <div class="modal fade" id="createModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
         aria-labelledby="createModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
@@ -21,7 +21,7 @@
                             <label for="fecha" class="form-label fw-bold text-primary">
                                 <i class="fas fa-calendar-day me-1"></i>Fecha
                             </label>
-                            <x-date-input name="fecha"/>
+                            <x-date-input name="fecha" />
                         </div>
 
                         <!-- Campo Descripción -->
@@ -55,11 +55,11 @@
 
                     <!-- Footer del modal -->
                     <div class="modal-footer bg-light">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            <i class="fas fa-times me-1"></i>Cancelar
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                            <i class="ti ti-square-x"></i> Cancelar
                         </button>
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save me-1"></i>Guardar
+                            <i class="ti ti-device-floppy"></i> Guardar
                         </button>
                     </div>
                 </form>
@@ -74,114 +74,115 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
+
         <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">Crear
-            evento <i class="ti ti-circle-plus"></i></button>
+            evento <i class="ti ti-plus"></i></button>
         <div class="row">
+
             @foreach ($eventos as $evento)
                 <div class="col-md-4 mb-3">
                     <div class="card h-100" style="border-radius: 15px; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);">
                         <div class="card-body p-4 d-flex flex-column justify-content-between">
-                            <div class="text-center">
-                                <h4 class="card-title" style="font-weight: bold; color: #5a5a5a;">Evento </h4>
-                                <p class="card-text" style="font-size: 1.1rem; color: #9b9b9b;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h4 class="card-title">Evento </h4>
+                                <span class="badge text-bg-primary rounded-pill">
                                     {{ \Carbon\Carbon::parse($evento->fecha)->format('d M, Y') }}
-                                </p>
+                                </span>
                             </div>
                             <div class="mb-0">
-                                <p class="card-text text-center mb-2">
-                                    <strong>Fecha:</strong> {{ \Carbon\Carbon::parse($evento->fecha)->format('d/m/Y') }}
+                                <p class="card-text mb-2">
+                                    <strong><i class="ti ti-calendar me-1 fs-6"></i></strong>
+                                    {{ \Carbon\Carbon::parse($evento->fecha)->format('d/m/Y') }}
                                 </p>
-                                <p class="card-text text-center">
-                                    <strong>Descripción:</strong> {{ $evento->descripcion }}
+                                <p class="card-text">
+                                    {{ $evento->descripcion }}
                                 </p>
                             </div>
-                            <div class="d-flex justify-content-center gap-3 mt-3">
+                            <div class="d-flex justify-content-center gap-2 mt-3">
                                 <!-- Botón Editar -->
-                                <button class="btn btn-outline-primary" data-bs-toggle="modal"
+                                <button class="btn btn-primary w-100" data-bs-toggle="modal"
                                     data-bs-target="#editModal-{{ $evento->id }}">
-                                    <i class="ti ti-edit"></i>
+                                    <i class="ti ti-edit"></i> Editar
                                 </button>
+
+                                <!-- Modal para editar -->
+                                <div class="modal fade" id="editModal-{{ $evento->id }}" tabindex="-1"
+                                    aria-labelledby="editModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="editModalLabel">Editar Evento</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <form action="{{ route('eventos.update', $evento->id) }}" method="POST">
+                                                @csrf
+                                                @method('PUT')
+                                                <div class="modal-body">
+                                                    <div class="mb-3">
+                                                        <label for="fecha" class="form-label">Fecha</label>
+                                                        <input type="date" class="form-control" id="fecha"
+                                                            name="fecha" value="{{ $evento->fecha }}" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="descripcion" class="form-label">Descripción</label>
+                                                        <textarea name="descripcion" id="descripcion" class="form-control" rows="4">{{ $evento->descripcion }}</textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-danger"
+                                                        data-bs-dismiss="modal"> <i class="ti ti-square-x"></i>
+                                                        Cancelar</button>
+                                                    <button type="submit" class="btn btn-primary"> <i
+                                                            class="ti ti-device-floppy"></i>
+                                                        Guardar</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <!-- Botón Eliminar -->
-                                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                                <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal"
                                     data-bs-target="#deleteModal-{{ $evento->id }}">
-                                    <i class="ti ti-trash"></i>
+                                    <i class="ti ti-trash"></i> Eliminar
                                 </button>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- Modal de confirmación -->
-                    <div class="modal fade" id="deleteModal-{{ $evento->id }}" tabindex="-1"
-                        aria-labelledby="deleteModalLabel-{{ $evento->id }}" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="deleteModalLabel-{{ $evento->id }}">Confirmar
-                                        Eliminación
-                                    </h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Cerrar"></button>
-                                </div>
-                                <div class="modal-body">
-                                    ¿Estás seguro de que deseas eliminar el evento del
-                                    <strong>{{ \Carbon\Carbon::parse($evento->fecha)->format('d/m/Y') }}</strong>? Esta
-                                    acción no se puede
-                                    deshacer.
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Cancelar</button>
-                                    <form action="{{ route('eventos.delete', $evento->id) }}" method="POST"
-                                        class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger">Eliminar</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <!-- Modal para editar -->
-                <div class="modal fade" id="editModal-{{ $evento->id }}" tabindex="-1"
-                    aria-labelledby="editModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="editModalLabel">Editar Evento</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <form action="{{ route('eventos.update', $evento->id) }}" method="POST">
-                                @csrf
-                                @method('PUT')
-                                <div class="modal-body">
-                                    <div class="mb-3">
-                                        <label for="nombre-{{ $periodo->id }}" class="form-label">Nombre</label>
-                                        <input type="text" class="form-control" id="nombre-{{ $evento->id }}"
-                                            name="nombre" value="{{ $evento->fecha }}" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="fecha-{{ $evento->id }}" class="form-label">Fecha</label>
-                                        <input type="date" class="form-control" id="fecha-{{ $evento->id }}"
-                                            name="fecha" value="{{ $evento->fecha }}" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="descripcion-{{ $evento->id }}"
-                                            class="form-label">Descripción</label>
-                                        <input type="text" class="form-control" id="descripcion-{{ $evento->id }}"
-                                            name="descripcion" value="{{ $evento->descripcion }}" required>
+                                <!-- Modal de eliminación -->
+                                <div class="modal fade" id="deleteModal-{{ $evento->id }}" tabindex="-1"
+                                    aria-labelledby="deleteModalLabel-{{ $evento->id }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="deleteModalLabel-{{ $evento->id }}">
+                                                    Confirmar
+                                                    Eliminación
+                                                </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Cerrar"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                ¿Estás seguro de que deseas eliminar el evento del
+                                                <strong>{{ \Carbon\Carbon::parse($evento->fecha)->format('d/m/Y') }}</strong>?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i
+                                                        class="ti ti-square-x"></i>
+                                                    Cancelar</button>
+                                                <form action="{{ route('eventos.delete', $evento->id) }}" method="POST"
+                                                    class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger"><i
+                                                            class="ti ti-trash"></i>
+                                                        Eliminar</button>
+                                                </form>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger"
-                                        data-bs-dismiss="modal">Cancelar</button>
-                                    <button type="submit" class="btn btn-primary">Actualizar</button>
-                                </div>
-                            </form>
+
+                            </div>
                         </div>
                     </div>
                 </div>
