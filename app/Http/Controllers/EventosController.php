@@ -10,7 +10,7 @@ class EventosController extends Controller
     public function index()
     {
         $periodos = DB::table('periodo')->get();
-        $eventos = DB::table('evento')->paginate(3);
+        $eventos = DB::table('evento')->paginate(6);
         return view('admin.eventos', compact('eventos', 'periodos'));
     }
 

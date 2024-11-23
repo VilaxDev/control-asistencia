@@ -213,17 +213,17 @@ class AsistenciasController extends Controller
 
         // Obtener el colaborador relacionado a la asistencia
         $colaborador = DB::table('colaborador')
-            ->where('id', $asistencia->colaborador_id)
-            ->first();
+            ->where('id', $asistencia->id_colaborador)
+            ->first();  
 
         // Obtener el usuario relacionado al colaborador
         $usuario = DB::table('usuario')
-            ->where('id', $colaborador->usuario_id)
+            ->where('id', $colaborador->id_usuario)
             ->first();
 
         // Obtener el horario relacionado al colaborador
         $horario = DB::table('horario')
-            ->where('id', $colaborador->horario_id)
+            ->where('id', $colaborador->id_horario)
             ->first();
 
         // Pasar los datos a la vista
@@ -240,7 +240,7 @@ class AsistenciasController extends Controller
     {
         // Validación de los datos de entrada
         $request->validate([
-            'email' => 'required|email',
+            'email' => 'required',
             'password' => 'required',
             'imei' => 'required'
         ]);
@@ -255,38 +255,17 @@ class AsistenciasController extends Controller
 
         // Verificar la contraseña
         if (!Hash::check($request->password, $usuario->password)) {
-            return response()->json(['error' => 'Contraseña incorrecta'], 401);
+            return response()->json(['error' => 'Contraseña incorrecta'], 404);
         }
 
         // Verificación y manejo del IMEI
         if (empty($usuario->imei)) {
-            // Primera vez - guardar el IMEI manteniendo todos los campos
             DB::table('usuario')->where('id', $usuario->id)->update([
-                'nombre' => $usuario->nombre,
-                'apellidos' => $usuario->apellidos,
-                'email' => $usuario->email,
-                'password' => $usuario->password,
-                'rol' => $usuario->rol,
-                'imei' => $request->imei,  // Actualizamos solo el IMEI
-                'fecha_creacion' => $usuario->fecha_creacion,
+                'imei' => $request->imei,
             ]);
-        } else if ($usuario->imei !== $request->imei) {
-            // Si ya tiene un IMEI y es diferente al enviado
-            return response()->json(['error' => 'Ya se ha iniciado sesión en otro dispositivo'], 409);
-        } else {
-            // Si el IMEI es igual al registrado, actualizar para mantener el registro
-            DB::table('usuario')->where('id', $usuario->id)->update([
-                'nombre' => $usuario->nombre,
-                'apellidos' => $usuario->apellidos,
-                'email' => $usuario->email,
-                'password' => $usuario->password,
-                'rol' => $usuario->rol,
-                'imei' => $usuario->imei,  // Mantenemos el mismo IMEI
-                'fecha_creacion' => $usuario->fecha_creacion,
-            ]);
+        } elseif ($usuario->imei !== $request->imei) {
+            return response()->json(['error' => 'Ya se ha iniciado sesión en otro dispositivo'], 404);
         }
-
-
 
         // Buscar el colaborador asociado al usuario
         $colaborador = DB::table('colaborador')->where('id_usuario', $usuario->id)->first();
@@ -296,39 +275,30 @@ class AsistenciasController extends Controller
             return response()->json(['error' => 'Colaborador no encontrado'], 404);
         }
 
+        // Verificar el estado del colaborador
+        if ($colaborador->estado === 'off') {
+            return response()->json(['error' => 'El colaborador está inactivo'], 404);
+        }
+
         // Buscar el horario asociado al colaborador
         $horario = DB::table('horario')->where('id', $colaborador->id_horario)->first();
 
-        // Si el horario no se encuentra
         if (!$horario) {
             return response()->json(['error' => 'Horario no encontrado'], 404);
         }
 
-        // Convertir dias_laborales a un array
-        $diasLaborales = json_decode($horario->dias_laborales, true);
-        if (!is_array($diasLaborales)) {
-            $diasLaborales = [];
-        }
+        $diasLaborales = json_decode($horario->dias_laborales, true) ?? [];
 
-        // Obtener el año actual
         $currentYear = date('Y');
 
-        // Buscar el periodo actual basado en el año actual
-        $periodo = DB::table('periodo')
-            ->where('anio', $currentYear)
-            ->first();
+        $periodo = DB::table('periodo')->where('anio', $currentYear)->first();
 
-        // Si no existe periodo para el año actual
         if (!$periodo) {
             return response()->json(['error' => 'No se encontró un periodo activo para el año actual'], 404);
         }
 
-        // Buscar los eventos asociados al periodo actual
-        $eventos = DB::table('evento')
-            ->where('id_periodo', $periodo->id)
-            ->get();
+        $eventos = DB::table('evento')->where('id_periodo', $periodo->id)->get();
 
-        // Preparar los datos de respuesta
         $usuarioData = [
             'id' => $usuario->id,
             'nombre' => $usuario->nombre,
@@ -375,7 +345,8 @@ class AsistenciasController extends Controller
         ], 200);
     }
 
-    public function updateToken($id)
+
+    public function logout($id)
     {
         try {
             // Buscar el usuario por el ID

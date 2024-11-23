@@ -50,68 +50,69 @@
                             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                             <span class="hide-menu">Administracion</span>
                         </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ url('admin/periodos') }}" aria-expanded="false">
-                                <span>
-                                    <img src="{{ url('/assets/images/logos/calendar-bolt.svg') }}" alt="">
-                                </span>
-                                <span class="hide-menu">Periodos</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ url('admin/eventos') }}" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-calendar-event"></i>
-                                </span>
-                                <span class="hide-menu">Eventos</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link dropdown-toggle" href="javascript:void(0)" aria-expanded="false">
-                                <span class="d-flex">
-                                    <i class="ti ti-calendar-plus"></i>
-                                </span>
-                                <span class="hide-menu">Gestion de Horarios</span>
-                            </a>
-                            <ul aria-expanded="false" class="collapse first-level">
-                                <li class="sidebar-item">
-                                    <a href="{{ url('admin/horarios') }}" class="sidebar-link">
-                                        <div class="round-16 d-flex align-items-center justify-content-center">
-                                            <i class="ti ti-calendar-stats"></i>
-                                        </div>
-                                        <span class="hide-menu">Horarios</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
 
-                        <li class="sidebar-item">
-                            <a class="sidebar-link dropdown-toggle" href="javascript:void(0)" aria-expanded="false">
-                                <span class="d-flex">
-                                    <i class="ti ti-user-plus"></i>
-                                </span>
-                                <span class="hide-menu">Gestion de Usuarios</span>
-                            </a>
-                            <ul aria-expanded="false" class="collapse first-level">
-                                <li class="sidebar-item">
-                                    <a href="{{ url('admin/tipos-colaborador') }}" class="sidebar-link">
-                                        <div class="round-16 d-flex align-items-center justify-content-center">
-                                            <i class="ti ti-user"></i>
-                                        </div>
-                                        <span class="hide-menu">Tipos</span>
-                                    </a>
-                                </li>
-                                <li class="sidebar-item">
-                                    <a href="{{ url('admin/colaboradores') }}" class="sidebar-link">
-                                        <div class="round-16 d-flex align-items-center justify-content-center">
-                                            <i class="ti ti-users"></i>
-                                        </div>
-                                        <span class="hide-menu">Colaboradores</span>
-                                    </a>
-                                </li>
-
-                            </ul>
-                        </li>
+                        @if (!Auth::guard('supervisor')->check())
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{{ url('admin/periodos') }}" aria-expanded="false">
+                                    <span>
+                                        <img src="{{ url('/assets/images/logos/calendar-bolt.svg') }}" alt="">
+                                    </span>
+                                    <span class="hide-menu">Periodos</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{{ url('admin/eventos') }}" aria-expanded="false">
+                                    <span>
+                                        <i class="ti ti-calendar-event"></i>
+                                    </span>
+                                    <span class="hide-menu">Eventos</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link dropdown-toggle" href="javascript:void(0)" aria-expanded="false">
+                                    <span class="d-flex">
+                                        <i class="ti ti-calendar-plus"></i>
+                                    </span>
+                                    <span class="hide-menu">Gestion de Horarios</span>
+                                </a>
+                                <ul aria-expanded="false" class="collapse first-level">
+                                    <li class="sidebar-item">
+                                        <a href="{{ url('admin/horarios') }}" class="sidebar-link">
+                                            <div class="round-16 d-flex align-items-center justify-content-center">
+                                                <i class="ti ti-calendar-stats"></i>
+                                            </div>
+                                            <span class="hide-menu">Horarios</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link dropdown-toggle" href="javascript:void(0)" aria-expanded="false">
+                                    <span class="d-flex">
+                                        <i class="ti ti-user-plus"></i>
+                                    </span>
+                                    <span class="hide-menu">Gestion de Usuarios</span>
+                                </a>
+                                <ul aria-expanded="false" class="collapse first-level">
+                                    <li class="sidebar-item">
+                                        <a href="{{ url('admin/tipos-colaborador') }}" class="sidebar-link">
+                                            <div class="round-16 d-flex align-items-center justify-content-center">
+                                                <i class="ti ti-user"></i>
+                                            </div>
+                                            <span class="hide-menu">Tipos</span>
+                                        </a>
+                                    </li>
+                                    <li class="sidebar-item">
+                                        <a href="{{ url('admin/colaboradores') }}" class="sidebar-link">
+                                            <div class="round-16 d-flex align-items-center justify-content-center">
+                                                <i class="ti ti-users"></i>
+                                            </div>
+                                            <span class="hide-menu">Colaboradores</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endif
 
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ url('admin/asistencias') }}" aria-expanded="false">

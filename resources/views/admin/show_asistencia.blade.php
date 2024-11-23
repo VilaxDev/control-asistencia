@@ -114,5 +114,9 @@
                 </div>
             </div>
         </div>
+
+        <div>
+            <a href="{{ url('admin/asistencias') }}" class="btn btn-primary"><i class="ti ti-arrow-back"></i> Volver</a>
+        </div>
     </div>
 @endsection

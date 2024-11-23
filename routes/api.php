@@ -7,7 +7,7 @@ use App\Http\Controllers\HorarioController;
 
 Route::post('/admin/api/colaborador/login', [AsistenciasController::class, 'login']);
 Route::post('/admin/api/datos/update/colaborador/{id}', [AsistenciasController::class, 'actualizarDatos']);
-Route::put('/admin/api/update/token/usuario/{id}', [AsistenciasController::class, 'updateToken']);
+Route::put('/admin/api/update/imei/usuario/{id}', [AsistenciasController::class, 'logout']);
 
 Route::get('/admin/api/horarios', [HorarioController::class, 'api']);
 

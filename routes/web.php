@@ -32,6 +32,7 @@ Route::post('/password/verify', [PasswordResetController::class, 'verifyEmail'])
 Route::put('/password/update', [PasswordResetController::class, 'updatePassword'])->name('password.update');
 
 Route::middleware('auth:admin,supervisor')->group(function () {
+
     Route::get('admin/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     //Perfil

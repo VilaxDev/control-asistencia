@@ -17,7 +17,7 @@
                             <h5 class="card-title">Asistencia de Hoy</h5>
                             <i class="ti ti-users text-primary fs-6"></i>
                         </div>
-                        <h2 class="card-text text-primary">85%</h2>
+                        <h2 class="card-text text-primary">{{ number_format($porcentajeAsistencia, 2) }}%</h2>
                         <p class="card-text">Total de asistencia de los colaboradores hoy.</p>
                         <a href="{{ url('admin/asistencias') }}" class="btn btn-primary">Ver Detalles</a>
                     </div>
@@ -32,7 +32,7 @@
                             <h5 class="card-title">Tardanzas</h5>
                             <i class="ti ti-clock text-warning fs-6"></i>
                         </div>
-                        <h2 class="card-text text-warning">15</h2>
+                        <h2 class="card-text text-warning"> {{ $totalTardanzas }}</h2>
                         <p class="card-text">Número de tardanzas registradas hoy.</p>
                         <a href="#" class="btn btn-warning">Ver Detalles</a>
                     </div>
@@ -47,7 +47,7 @@
                             <h5 class="card-title">Inasistencias</h5>
                             <i class="ti ti-user-x text-danger fs-6"></i>
                         </div>
-                        <h2 class="card-text text-danger">5</h2>
+                        <h2 class="card-text text-danger">{{ $totalInasistencia }}</h2>
                         <p class="card-text">Colaboradores ausentes hoy.</p>
                         <a href="#" class="btn btn-danger">Ver Detalles</a>
                     </div>
@@ -62,7 +62,7 @@
                             <h5 class="card-title">Justificaciones</h5>
                             <i class="ti ti-notes text-info fs-6"></i>
                         </div>
-                        <h2 class="card-text text-info">3</h2>
+                        <h2 class="card-text text-info">{{ $totalJustificaciones }}</h2>
                         <p class="card-text">Solicitudes de justificación recibidas hoy.</p>
                         <a href="#" class="btn btn-info">Ver Detalles</a>
                     </div>
@@ -77,7 +77,7 @@
                             <h5 class="card-title">Total de Colaboradores</h5>
                             <i class="ti ti-users text-success fs-6"></i>
                         </div>
-                        <h2 class="card-text text-success">120</h2>
+                        <h2 class="card-text text-success">{{ $totalColaboradores }}</h2>
                         <p class="card-text">Colaboradores registrados en el sistema.</p>
                         <a href="{{ url('admin/colaboradores') }}" class="btn btn-success">Ver Detalles</a>
                     </div>

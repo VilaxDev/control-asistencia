@@ -30,9 +30,6 @@ class LoginController extends Controller
                 case 'Supervisor':
                     $guard = 'supervisor';
                     break;
-                case 'Colaborador':
-                    $guard = 'colaborador';
-                    break;
             }
 
             // Autenticamos el usuario usando el guard correspondiente

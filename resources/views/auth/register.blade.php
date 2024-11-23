@@ -5,7 +5,6 @@
             <h2 class="mb-1 fs-7 fw-bolder">Bienvenido a Power Code</h2>
             <p class="mb-7">Su panel de administración</p>
 
-
             <form action="{{ route('register.store') }}" method="post">
                 @csrf
 
@@ -28,7 +27,9 @@
                 <div class="mb-3">
                     <label class="form-label" for="rol">Rol</label>
                     <select class="form-select form-control" name="rol" id="rol" required>
-                        <option value="Administrador" selected>Administrador</option>
+                        <option selected>Selecionar Rol</option>
+                        <option value="Administrador">Administrador</option>
+                        <option value="Supervisor">Supervisor</option>
                     </select>
                 </div>
                 <button class="btn btn-primary w-100 py-8 mb-4 rounded-2" type="submit">Registrarse
