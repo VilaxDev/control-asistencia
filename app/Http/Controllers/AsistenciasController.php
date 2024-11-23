@@ -9,6 +9,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 
+use function Pest\Laravel\json;
 
 class AsistenciasController extends Controller
 {
@@ -561,6 +562,59 @@ class AsistenciasController extends Controller
             'horario' => $horarioData,
             'periodo' => $periodoData,
             'eventos' => $eventosData,
+        ], 200);
+    }
+
+
+    public function verificarEmail(Request $request)
+    {
+        $email = $request->input('email');
+        // Verificar si el correo electrónico existe en la base de datos
+        $usuario = DB::table('usuario')->where('email', $email)->first();
+
+        if (!$usuario) {
+            return response()->json(['error' => 'Usuario no encontrado'], 404);
+        }
+
+        return response()->json([
+            'message' => 'Email verificado correctamente',
+            'type' => 'success'
+        ], 200);
+    }
+
+    public function updatePassword(Request $request)
+    {
+        // Validar los datos de entrada
+        $request->validate([
+            'email' => 'required|email',
+            'newPassword' => 'required|min:6',
+        ]);
+
+        $email = $request->input('email');
+        $newPassword = $request->input('newPassword');
+
+        // Verificar si el usuario existe en la base de datos
+        $usuario = DB::table('usuario')->where('email', $email)->first();
+
+        if (!$usuario) {
+            return response()->json(['error' => 'Usuario no encontrado'], 404);
+        }
+
+        // Actualizar la contraseña del usuario y recuperar los datos
+        DB::table('usuario')
+            ->where('email', $email)
+            ->update([
+                'password' => bcrypt($newPassword),
+                'nombre' => $usuario->nombre,
+                'apellidos' => $usuario->apellidos,
+                'email' => $usuario->email,
+                'imei' => $usuario->imei,
+                'rol' => $usuario->rol,
+                'fecha_creacion' => $usuario->fecha_creacion,
+            ]);
+
+        return response()->json([
+            'message' => 'Contraseña restablecida con éxito',
         ], 200);
     }
 }

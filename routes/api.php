@@ -22,3 +22,5 @@ Route::post('/admin/api/asistencias/register', [AsistenciasController::class, 'r
 Route::put('/admin/api/asistencias/update/{id}', [AsistenciasController::class, 'update']);
 
 Route::post('/admin/api/justificacion/asistencia/colaborador/{id}', [AsistenciasController::class, 'JustificacionAsistencia']);
+Route::post('/admin/api/verificar/email', [AsistenciasController::class, 'verificarEmail']);
+Route::put('/admin/api/password/update', [AsistenciasController::class, 'updatePassword']);

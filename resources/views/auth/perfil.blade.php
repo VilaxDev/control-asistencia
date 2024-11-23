@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    <!--Modal edit user -->
+    <!-- Modal edit user -->
     <div class="modal fade" id="modalId_{{ $usuario->id }}" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
         role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable modal-dm" role="document">
@@ -16,18 +16,18 @@
                     @method('PUT')
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="fecha" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="fecha" name="nombre"
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre"
                                 value="{{ $usuario->nombre }}" required>
                         </div>
                         <div class="mb-3">
-                            <label for="fecha" class="form-label">Apellidos</label>
-                            <input type="text" class="form-control" id="fecha" name="apellidos"
+                            <label for="apellidos" class="form-label">Apellidos</label>
+                            <input type="text" class="form-control" id="apellidos" name="apellidos"
                                 value="{{ $usuario->apellidos }}" required>
                         </div>
                         <div class="mb-3">
-                            <label for="fecha" class="form-label">Correo Electronico</label>
-                            <input type="email" class="form-control" id="fecha" name="email"
+                            <label for="email" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="email" name="email"
                                 value="{{ $usuario->email }}" required>
                         </div>
                     </div>
@@ -68,11 +68,12 @@
                     </ul>
                     <h5 class="mt-4 mb-3">Estado de la Cuenta</h5>
                     <div class="alert alert-info">
+              
                     </div>
                     <div class="d-flex justify-content-end">
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                             data-bs-target="#modalId_{{ $usuario->id }}">
-                            Editar Perfil
+                            <i class="ti ti-edit"></i> Editar Perfil
                         </button>
                     </div>
                 </div>

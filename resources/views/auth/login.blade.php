@@ -50,7 +50,7 @@
                             Recuerda este dispositivo
                         </label>
                     </div>
-                    <a class="text-primary fw-medium fs-3" href="{{ url('reset-password') }}">Olvidó Contraseña ?</a>
+                    <a class="text-primary fw-medium fs-3" href="{{ url('auth/reset_password') }}">Olvidó Contraseña ?</a>
                 </div>
                 <button type="submit" class="btn btn-primary w-100 py-8 mb-4 rounded-2">Iniciar sesión</button>
                 <div class="d-flex align-items-center justify-content-center">

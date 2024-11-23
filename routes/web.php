@@ -13,6 +13,7 @@ use App\Http\Controllers\EventosController;
 use App\Http\Controllers\AsistenciasController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\ReportesController;
+use App\Http\Controllers\PasswordResetController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -25,9 +26,10 @@ route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 Route::get('/register', [RegisterController::class, 'index'])->name('register.index');
 Route::post('/register/store', [RegisterController::class, 'store'])->name('register.store');
 
-Route::get('/reset-password', function () {
-    return view('auth.reset_password');
-})->name('reset-password');
+
+Route::get('/auth/reset_password', [PasswordResetController::class, 'index'])->name('auth.reset_password');
+Route::post('/password/verify', [PasswordResetController::class, 'verifyEmail']);
+Route::put('/password/update', [PasswordResetController::class, 'updatePassword'])->name('password.update');
 
 Route::middleware('auth:admin,supervisor')->group(function () {
     Route::get('admin/dashboard', [DashboardController::class, 'index'])->name('dashboard');
