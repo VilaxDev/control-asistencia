@@ -208,9 +208,8 @@
                                                                 <label for="password"
                                                                     class="form-label">Contraseña</label>
                                                                 <input type="text" class="form-control"
-                                                                    name="password" value="{{ $colaborador->password }}"
-                                                                    id="" placeholder="Ingrese su contraseña"
-                                                                    required />
+                                                                    name="password" id=""
+                                                                    placeholder="Ingrese su contraseña" required />
                                                             </div>
 
                                                             <div class="mb-3">
