@@ -181,7 +181,7 @@ class AsistenciasController extends Controller
             DB::table('asistencia')->where('id', $id)->update($updateData);
 
             return response()->json([
-                'success' => true,
+                'type' => 'success',
                 'message' => 'Salida registrada exitosamente',
                 'data' => [
                     'id_asistencia' => $id,
