@@ -214,7 +214,12 @@ class AsistenciasController extends Controller
         // Obtener el colaborador relacionado a la asistencia
         $colaborador = DB::table('colaborador')
             ->where('id', $asistencia->id_colaborador)
-            ->first();  
+            ->first();
+
+        // Obtener la justificacion del colaborador
+        $justificacion = DB::table('justificacion')
+            ->where('id', $asistencia->id_justificacion)
+            ->first();
 
         // Obtener el usuario relacionado al colaborador
         $usuario = DB::table('usuario')
@@ -232,6 +237,7 @@ class AsistenciasController extends Controller
             'colaborador' => $colaborador,
             'usuario' => $usuario,
             'horario' => $horario,
+            'justificacion' => $justificacion,
         ]);
     }
 

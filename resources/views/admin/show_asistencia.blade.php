@@ -96,6 +96,20 @@
                             </div>
                         </div>
 
+                        @if ($justificacion)
+                            <div class="col-md-6">
+                                <div class="alert alert-warning d-flex align-items-center" role="alert">
+                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                    <div>
+                                        <h6 class="alert-heading mb-1"> {{ $justificacion->motivo }}</h6>
+                                        <p class="mb-0">
+                                            {{ $justificacion->descripcion }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
                         @if ($asistencia->tardanza || $asistencia->inasistencia)
                             <div class="col-md-6">
                                 <div class="alert alert-warning d-flex align-items-center" role="alert">
