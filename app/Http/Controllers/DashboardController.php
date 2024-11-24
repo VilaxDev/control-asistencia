@@ -44,9 +44,7 @@ class DashboardController extends Controller
                 ->count();
 
             // Filtrar justificaciones por la fecha actual
-            $totalJustificaciones = DB::table('justificacion')
-                ->whereDate('fecha', $fechaActual)
-                ->count();
+            $totalJustificaciones = DB::table('justificacion')->count();
 
             // Total de colaboradores (independiente de la fecha)
             $totalColaboradores = DB::table('colaborador')->count();
@@ -92,9 +90,7 @@ class DashboardController extends Controller
                 ->count();
 
             // Filtrar justificaciones por la fecha actual
-            $totalJustificaciones = DB::table('justificacion')
-                ->whereDate('fecha', $fechaActual)
-                ->count();
+            $totalJustificaciones = DB::table('justificacion')->count();
 
             // Total de colaboradores (independiente de la fecha)
             $totalColaboradores = DB::table('colaborador')->count();
