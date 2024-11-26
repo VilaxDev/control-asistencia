@@ -8,22 +8,22 @@
                 <div class="col-6 mb-2 mb-sm-0">
                     <a class="btn text-dark border fw-normal d-flex align-items-center justify-content-center rounded-2 py-8"
                         href="javascript:void(0)" role="button">
-                        <img src="https://bootstrapdemos.adminmart.com/modernize/dist/assets/images/svgs/google-icon.svg"
-                            alt="modernize-img" class="img-fluid me-2" width="18" height="18">
-                        <span class="flex-shrink-0">con Google</span>
+                        <img src="https://cdn-icons-png.flaticon.com/128/3479/3479876.png" alt="modernize-img"
+                            class="img-fluid me-2" width="19" height="18">
+                        <span class="flex-shrink-0">Security</span>
                     </a>
                 </div>
                 <div class="col-6">
                     <a class="btn text-dark border fw-normal d-flex align-items-center justify-content-center rounded-2 py-8"
                         href="javascript:void(0)" role="button">
-                        <img src="https://bootstrapdemos.adminmart.com/modernize/dist/assets/images/svgs/facebook-icon.svg"
-                            alt="modernize-img" class="img-fluid me-2" width="18" height="18">
-                        <span class="flex-shrink-0">con FB</span>
+                        <img src="https://cdn-icons-png.flaticon.com/128/3876/3876146.png" alt="modernize-img"
+                            class="img-fluid me-2" width="19" height="18">
+                        <span class="flex-shrink-0">Password</span>
                     </a>
                 </div>
             </div>
             <div class="position-relative text-center my-4">
-                <p class="mb-0 fs-4 px-3 d-inline-block bg-body text-dark z-index-5 position-relative">o inicia sesión con
+                <p class="mb-0 fs-4 px-3 d-inline-block bg-body text-dark z-index-5 position-relative">inicia sesión con
                 </p>
                 <span class="border-top w-100 position-absolute top-50 start-50 translate-middle"></span>
             </div>

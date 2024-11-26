@@ -1,17 +1,20 @@
 @extends('layouts.app')
 @section('content')
-    <div class="container mt-5">
+    <div class="container">
         <div class="row">
             <div class="col-md-12 text-center">
-                <h1>Acerca de Nosotros</h1>
+                <h1 class="mb-4">Nuestros Valores</h1>
+                <h5>Misión</h5>
                 <p class="mt-4">
-                    Somos una empresa dedicada a ofrecer soluciones innovadoras en el sector tecnológico. Nuestro equipo
-                    está compuesto por profesionales con años de experiencia, comprometidos en brindar productos y servicios
-                    de alta calidad.
+                    Ofrecer soluciones tecnológicas innovadoras y personalizadas, involucrando a nuestros clientes en cada
+                    etapa del desarrollo para automatizar procesos, generar valor y alcanzar sus objetivos de manera
+                    colaborativa y sostenible.
                 </p>
+                <h5>Visión</h5>
                 <p class="mt-4">
-                    Nuestro objetivo es satisfacer las necesidades de nuestros clientes, proporcionando soluciones
-                    eficientes, personalizadas y a la vanguardia de la tecnología.
+                    Ser una empresa tecnológica confiable y reconocida, avalada por las certificaciones más relevantes del
+                    sector, capaz de competir con las grandes empresas, adaptándonos continuamente a las nuevas demandas del
+                    mercado.
                 </p>
                 <p class="mt-4">
                     Contáctanos para conocer más sobre cómo podemos ayudarte a llevar tu negocio al siguiente nivel.
