@@ -11,15 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('jobs', function (Blueprint $table) {
-            $table->id();
-            $table->string('queue', 255);
-            $table->longText('payload');
-            $table->unsignedTinyInteger('attempts');
-            $table->unsignedBigInteger('reserved_at')->nullable();
-            $table->unsignedBigInteger('available_at');
-            $table->timestamps();
-        });
+     
     }
 
     /**
@@ -27,6 +19,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('jobs');
+       
     }
 };

@@ -11,18 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('job_batches', function (Blueprint $table) {
-            $table->string('id', 255)->primary();
-            $table->string('name', 255);
-            $table->unsignedInteger('total_jobs');
-            $table->unsignedInteger('pending_jobs');
-            $table->unsignedInteger('failed_jobs');
-            $table->longText('failed_job_ids');
-            $table->mediumText('options')->nullable();
-            $table->unsignedBigInteger('cancelled_at')->nullable();
-            $table->unsignedBigInteger('finished_at')->nullable();
-            $table->timestamps();
-        });
+   
     }
 
     /**
@@ -30,6 +19,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('job_batches');
+        
     }
 };
